@@ -44,7 +44,7 @@ public class DocumentCrudCommands {
         try {
             Document document = repo.findById(id).orElseThrow(() -> new DBException("A person with id " + id + " cannot be found"));;
             document.setDocumentName(documentName);
-            document.setDesc(desc);
+            document.setDocumentDescription(desc);
             document.setCreatorId(creatorId);
             document.setTopic(topic);
             document = repo.save(document);
