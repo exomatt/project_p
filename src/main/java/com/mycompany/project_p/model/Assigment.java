@@ -9,5 +9,5 @@ public class Assigment {
     @OneToOne
     private Role role;
     @OneToOne
-    private Document document;
+    private Project project;
 }
