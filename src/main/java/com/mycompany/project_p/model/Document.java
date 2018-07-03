@@ -1,12 +1,12 @@
 package com.mycompany.project_p.model;
 
-import javax.annotation.Generated;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 
 public class Document {
     @Id
-    @Generated
+    @GeneratedValue
     private Long documentId;
     private String documentName;
     private String documentDescription;
@@ -16,7 +16,8 @@ public class Document {
     private Project project;
 
     public Document(){}
-    public Document(String documentName, String documentDescription, Long creatorId,String topic,Project project){
+    public Document(Long id,String documentName, String documentDescription, Long creatorId,String topic,Project project){
+        this.documentId=id;
         this.creatorId=creatorId;
         this.documentDescription=documentDescription;
         this.documentName=documentName;
@@ -55,10 +56,16 @@ public class Document {
     public void setTopic(String topic) {
         this.topic = topic;
     }
+
+    @Override
     public String toString() {
-        return "Project{" +
-                "name='" + projectName + '\'' +", description='" + projectDescription+ '\'' +", creator id='" + creatorId + '\'' +
-                ", documentlist='" + documents.toString() + '\'' +
-                '}';//need to check if correct
+        return "Document{" +
+                "documentId=" + documentId +
+                ", documentName='" + documentName + '\'' +
+                ", documentDescription='" + documentDescription + '\'' +
+                ", creatorId=" + creatorId +
+                ", topic='" + topic + '\'' +
+                ", project=" + project +
+                '}';
     }
 }
