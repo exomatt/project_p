@@ -1,4 +1,8 @@
 package com.mycompany.project_p.model;
 
-public class Role {
+public enum Role {
+    Manager,
+    Engineer,
+    HR,
+    Administrator
 }
