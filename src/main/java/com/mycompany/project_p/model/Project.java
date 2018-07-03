@@ -24,7 +24,7 @@ public class Project {
     @OneToMany
     private List<Document> documents = new ArrayList<Document>();
 
-    public Project(){}
+
     public Project(String projectName,Long creatorId, String projectDescription, List<Document> documents){
         this.projectName=projectName;
         this.creatorId=creatorId;
