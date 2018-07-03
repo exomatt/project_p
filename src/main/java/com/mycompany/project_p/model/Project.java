@@ -1,6 +1,7 @@
 package com.mycompany.project_p.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Generated;
 import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +18,7 @@ import javax.persistence.Table;
 @Table
 public class Project {
     @Id
+    @Generated
     private Long projectId;
     private String projectName;
     private Long creatorId;
