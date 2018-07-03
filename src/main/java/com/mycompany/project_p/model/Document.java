@@ -15,14 +15,25 @@ public class Document {
     @ManyToOne
     private Project project;
 
-    public Document(){}
-    public Document(Long id,String documentName, String documentDescription, Long creatorId,String topic,Project project){
-        this.documentId=id;
-        this.creatorId=creatorId;
-        this.documentDescription=documentDescription;
-        this.documentName=documentName;
-        this.topic=topic;
-        this.project=project;
+    public Document() {
+
+    }
+
+    public Document(Long documentId, String documentName, String documentDescription, Long creatorId, String topic) {
+        this.documentId = documentId;
+        this.documentName = documentName;
+        this.documentDescription = documentDescription;
+        this.creatorId = creatorId;
+        this.topic = topic;
+    }
+
+    public Document(Long id, String documentName, String documentDescription, Long creatorId, String topic, Project project) {
+        this.documentId = id;
+        this.creatorId = creatorId;
+        this.documentDescription = documentDescription;
+        this.documentName = documentName;
+        this.topic = topic;
+        this.project = project;
     }
 
     public void setDocumentName(String documentName) {

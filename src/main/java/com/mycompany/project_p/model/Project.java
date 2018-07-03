@@ -21,7 +21,14 @@ public class Project {
     @OneToMany
     private List<Document> documents = new ArrayList<Document>();
 
-    public Project(){}
+    public Project(){
+
+    }
+    public Project(Long id , String projectName,Long creatorId, String projectDescription){
+        this.projectName=projectName;
+        this.creatorId=creatorId;
+        this.projectDescription=projectDescription;
+    }
     public Project(Long id ,String projectName,Long creatorId, String projectDescription, List<Document> documents){
         this.projectId=id;
         this.projectName=projectName;
@@ -29,11 +36,7 @@ public class Project {
         this.projectDescription=projectDescription;
         this.documents=documents;
     }
-    public Project(String projectName,Long creatorId, String projectDescription){
-        this.projectName=projectName;
-        this.creatorId=creatorId;
-        this.projectDescription=projectDescription;
-    }
+
 
     public String getProjectName() {
         return projectName;

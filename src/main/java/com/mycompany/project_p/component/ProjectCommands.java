@@ -32,10 +32,13 @@ public class ProjectCommands {
     }
 
     @ShellMethod("Update project (id, name, description, creator )")
-    public String updateProject(Long id, String name, String description, String creator) {
+    public String updateProject(Long id, String name, String description, Long creator) {
         try {
             Project project= projectRepo.findById(id).orElseThrow(() -> new DBException("A project with id " + id + " cannot be found"));
-            project.
+            project.setProjectName(name);
+            project.setCreatorId(creator);
+            project.setProjectDescription(description);
+            return "";
         } catch (DBException e) {
             log.error("Cannot find project with id {}", id, e);
             return "The project with id " + id + " cannot be found";
