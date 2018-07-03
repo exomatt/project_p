@@ -9,8 +9,6 @@ import java.util.List;
 import javax.persistence.*;
 
 @Data
-@AllArgsConstructor
-@NoArgsConstructor
 @Entity
 @Table
 public class Project {
@@ -63,7 +61,9 @@ public class Project {
     public List<Document> getDocuments() {
         return documents;
     }
-
+    public void addToList(Document document){
+        documents.add(document);
+    }
     @Override
     public String toString() {
         return "Project{" +
