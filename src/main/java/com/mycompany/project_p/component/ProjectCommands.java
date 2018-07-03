@@ -38,7 +38,8 @@ public class ProjectCommands {
             project.setProjectName(name);
             project.setCreatorId(creator);
             project.setProjectDescription(description);
-            return "";
+            project = projectRepo.save(project);
+            return project.toString();
         } catch (DBException e) {
             log.error("Cannot find project with id {}", id, e);
             return "The project with id " + id + " cannot be found";

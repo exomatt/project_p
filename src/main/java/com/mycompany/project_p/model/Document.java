@@ -32,22 +32,7 @@ public class Document {
         this.project=project;
     }
 
-    public Document(Long documentId, String documentName, String documentDescription, Long creatorId, String topic) {
-        this.documentId = documentId;
-        this.documentName = documentName;
-        this.documentDescription = documentDescription;
-        this.creatorId = creatorId;
-        this.topic = topic;
-    }
 
-    public Document(Long id, String documentName, String documentDescription, Long creatorId, String topic, Project project) {
-        this.documentId = id;
-        this.creatorId = creatorId;
-        this.documentDescription = documentDescription;
-        this.documentName = documentName;
-        this.topic = topic;
-        this.project = project;
-    }
 
     public void setDocumentName(String documentName) {
         this.documentName = documentName;
