@@ -1,14 +1,12 @@
 package com.mycompany.project_p.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Generated;
 import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Data
 @AllArgsConstructor
@@ -17,6 +15,7 @@ import javax.persistence.Table;
 @Table
 public class Project {
     @Id
+    @GeneratedValue
     private Long projectId;
     private String projectName;
     private Long creatorId;
@@ -25,7 +24,8 @@ public class Project {
     private List<Document> documents = new ArrayList<Document>();
 
     public Project(){}
-    public Project(String projectName,Long creatorId, String projectDescription, List<Document> documents){
+    public Project(Long id ,String projectName,Long creatorId, String projectDescription, List<Document> documents){
+        this.projectId=id;
         this.projectName=projectName;
         this.creatorId=creatorId;
         this.projectDescription=projectDescription;

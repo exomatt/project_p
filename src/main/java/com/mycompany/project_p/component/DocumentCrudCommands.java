@@ -21,9 +21,9 @@ public class DocumentCrudCommands {
 
     private DocumentRepo repo;
 
-
-    public String createDocument(String name, String description, Long creatorID, String topic){
-        Document document = new Document(null, name, description, creatorID, topic);
+    @ShellMethod("Create document")
+    public String createDocument(String documentName, String desc, Long creatorId, String topic){
+        Document document = new Document(null, documentName, desc, creatorId, topic);
         document = repo.save(document);
         return "Project created succesfully.";
     }
@@ -40,10 +40,19 @@ public class DocumentCrudCommands {
     }
 
     @ShellMethod("Update document")
-    public String update(Long id, String name, String description, String creator, String topic) {
-        Document document = new Document(null, name, description, creator, topic);
-        document = repo.save(document);
-        return "Successfully updated the document -> " + document;
+    public String update(Long id, String documentName, String desc, Long creatorId, String topic) throws DBException {
+        try {
+            Document document = repo.findById(id).orElseThrow(() -> new DBException("A person with id " + id + " cannot be found"));;
+            document.setDocumentName(documentName);
+            document.setDesc(desc);
+            document.setCreatorId(creatorId);
+            document.setTopic(topic);
+            document = repo.save(document);
+            return "Successfully updated the document -> " + document;
+        } catch (DBException exception) {
+            log.error("Cannot find document with id {}", id, exception);
+            return "The document with id " + id + " cannot be updated because it cannot be found";
+        }
     }
 
     @ShellMethod("Find all documents")

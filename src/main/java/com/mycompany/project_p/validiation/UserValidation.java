@@ -13,10 +13,6 @@ public class UserValidation {
 
 //    public boolean loggin(User user){
 //
-//
-//        if (User)
-//        return  true;
-//        return false;
 //    }
 
 }
