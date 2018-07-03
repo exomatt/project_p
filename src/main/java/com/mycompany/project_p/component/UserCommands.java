@@ -15,27 +15,27 @@ import java.util.Optional;
 @ShellCommandGroup("User commands")
 public class UserCommands {
 
-    private UserRepo repo;
-    @Autowired
+    private UserRepo userRepo;
     private ProjectRepo projectRepo;
 
     @Autowired
-    public UserCommands(UserRepo repo) {
-        this.repo = repo;
+    public UserCommands(UserRepo repo, ProjectRepo projectRepo) {
+        this.userRepo = repo;
+        this.projectRepo = projectRepo;
     }
 
-    @ShellMethod
+    @ShellMethod("Create new user")
     public String createNewUser(String lastName, String login, String password){
         User user = new User(lastName, login, password);
-        user = repo.save(user);
+        user = userRepo.save(user);
         System.out.println(user.toString());
         return "Project created succesfully.";
     }
 
-    @ShellMethod
+    @ShellMethod("Add user to role")
     public String addUserToRole(Long userID, Long projectId, String roleName){
         Optional<Project> project = projectRepo.findById(projectId);
-        Optional<User> user = repo.findById(userID);
+        Optional<User> user = userRepo.findById(userID);
         //TO DO finish function
         return "";
     }

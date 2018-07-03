@@ -42,7 +42,7 @@ public class DocumentCrudCommands {
     @ShellMethod("Update document")
     public String update(Long id, String documentName, String desc, Long creatorId, String topic) throws DBException {
         try {
-            Document document = repo.findById(id).orElseThrow(() -> new DBException("A person with id " + id + " cannot be found"));;
+            Document document = repo.findById(id).orElseThrow(() -> new DBException("A person with id " + id + " cannot be found"));
             document.setDocumentName(documentName);
             document.setDocumentDescription(desc);
             document.setCreatorId(creatorId);
