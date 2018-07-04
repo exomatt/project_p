@@ -2,6 +2,7 @@ package com.dreamteam.project.component;
 
 import com.dreamteam.project.config.ConfigurationClass;
 import com.dreamteam.project.exeption.DBException;
+import com.dreamteam.project.model.Assigment;
 import com.dreamteam.project.model.Project;
 import com.dreamteam.project.model.User;
 import com.dreamteam.project.repository.AssigmentRepo;
@@ -27,7 +28,6 @@ import java.util.stream.StreamSupport;
 public class ProjectCommands {
     private ProjectRepo projectRepo;
     private AssigmentRepo assigmentRepo;
-    private DocumentRepo documentRepo;
     private ConfigurationClass configurationClass;
     private UserRepo userRepo;
 
@@ -61,17 +61,11 @@ public class ProjectCommands {
     }
 
     @ShellMethod("Show project details - which users are in which roles")
-    public String detailProject(Long id) {
-        try {
-            Project project = projectRepo.findById(id).orElseThrow(() -> new DBException("A project with id " + id + " cannot be found"));
-            //TODO to finished
-
-        } catch (DBException e) {
-            log.error("Cannot find project with id {}", id, e);
-            return "The project with id " + id + " cannot be found";
-        }
-
-        return "mock";
+    public String detailProject() {
+        Project project = configurationClass.getActualProject();
+        return StreamSupport.stream(assigmentRepo.findByProjectProjectId(project.getProjectId()).spliterator(), false)
+                .map(Assigment::toString)
+                .collect(Collectors.joining("\n"));
     }
 
 

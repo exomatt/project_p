@@ -66,6 +66,14 @@ public class Project {
         this.creatorId = creatorId;
     }
 
+    public Long getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
+    }
+
     public List<Document> getDocuments() {
         return documents;
     }

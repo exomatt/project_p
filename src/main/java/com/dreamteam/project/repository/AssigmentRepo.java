@@ -1,6 +1,7 @@
 package com.dreamteam.project.repository;
 
 import com.dreamteam.project.model.Assigment;
+import com.dreamteam.project.model.Project;
 import org.springframework.data.repository.CrudRepository;
 
 import java.util.List;
