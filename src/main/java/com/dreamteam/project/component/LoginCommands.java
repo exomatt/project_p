@@ -21,6 +21,8 @@ public class LoginCommands {
     private UserRepo userRepo;
     private ProjectRepo projectRepo;
 
+    public LoginCommands(){}
+
     @Autowired
     public LoginCommands(ConfigurationClass configurationClass, UserRepo userRepo,ProjectRepo projectRepo){
         this.configurationClass= configurationClass;
@@ -50,8 +52,13 @@ public class LoginCommands {
     }
 
     @ShellMethod
-    public String chooseProject(String projectName){
-        Project project = projectRepo.findByName(projectName);
+    public String chooseProject(Long projectId){
+        Project project= null;
+        try {
+            project = projectRepo.findById(projectId).orElseThrow(() -> new DBException("A project with id " + projectId + " cannot be found"));
+        } catch (DBException e) {
+            log.error("Cannot find project", projectId, e);
+        }
         configurationClass.setActualProject(project);
         return "Project: " + project.getProjectName();
     }
