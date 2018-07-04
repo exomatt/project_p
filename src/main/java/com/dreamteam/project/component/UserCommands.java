@@ -1,5 +1,6 @@
 package com.dreamteam.project.component;
 
+import com.dreamteam.project.config.ConfigurationClass;
 import com.dreamteam.project.model.Project;
 import com.dreamteam.project.model.Role;
 import com.dreamteam.project.model.User;
@@ -8,9 +9,13 @@ import com.dreamteam.project.exeption.DBException;
 import com.dreamteam.project.repository.UserRepo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
+import org.springframework.shell.standard.ShellMethodAvailability;
+
+import javax.annotation.PostConstruct;
 
 @Slf4j
 @ShellComponent
@@ -19,11 +24,13 @@ public class UserCommands {
 
     private UserRepo userRepo;
     private ProjectRepo projectRepo;
+    private ConfigurationClass configurationClass;
 
     @Autowired
-    public UserCommands(UserRepo repo, ProjectRepo projectRepo) {
+    public UserCommands(UserRepo repo, ProjectRepo projectRepo, ConfigurationClass configurationClass) {
         this.userRepo = repo;
         this.projectRepo = projectRepo;
+        this.configurationClass=configurationClass;
     }
 
     @ShellMethod("Create new user")
@@ -33,6 +40,7 @@ public class UserCommands {
         System.out.println(user.toString());
         return "User created succesfully.";
     }
+
 
     @ShellMethod("Add user to role")
     public String addUserToRole(Long userID, Long projectId, String roleName){

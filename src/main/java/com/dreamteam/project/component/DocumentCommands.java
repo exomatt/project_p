@@ -37,7 +37,7 @@ public class DocumentCommands {
     @ShellMethod("Find document by ID")
     public String findById(Long id) throws DBException {
         try {
-            Document document = repo.findById(id).orElseThrow(() -> new DBException("A person with id " + id + " cannot be found"));;
+            Document document = repo.findById(id).orElseThrow(() -> new DBException("A person with id " + id + " cannot be found"));
             return "Successfully found document -> " + document;
         } catch (DBException exception) {
             log.error("Cannot find document with id {}", id, exception);
@@ -46,9 +46,9 @@ public class DocumentCommands {
     }
 
     @ShellMethod("Update document")
-    public String update(Long id, String documentName, String desc, Long creatorId, String topic) throws DBException {
+    public String updateDocument(Long id, String documentName, String desc, Long creatorId, String topic) throws DBException {
         try {
-            Document document = repo.findById(id).orElseThrow(() -> new DBException("A person with id " + id + " cannot be found"));;
+            Document document = repo.findById(id).orElseThrow(() -> new DBException("A person with id " + id + " cannot be found"));
             document.setDocumentName(documentName);
             document.setDocumentDescription(desc);
             document.setCreatorId(creatorId);

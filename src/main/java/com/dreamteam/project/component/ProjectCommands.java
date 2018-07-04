@@ -28,6 +28,7 @@ public class ProjectCommands {
     private AssigmentRepo assigmentRepo;
     private DocumentRepo documentRepo;
     private ConfigurationClass  configurationClass;
+
     @ShellMethod("Create new project (name, description, creator )")
     public String createProject(String name, String description, long creator) {
         Project project = new Project(null, name, creator, description);
