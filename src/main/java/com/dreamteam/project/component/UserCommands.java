@@ -37,6 +37,7 @@ public class UserCommands {
 
     @ShellMethod("Create new user")
     public String createNewUser(String lastName, String login, String password) {
+        System.out.println(checkPermission(new Object(){}.getClass().getEnclosingMethod().getName()));
         User user = new User(lastName, login, password);
         user = userRepo.save(user);
         System.out.println(user.toString());
@@ -50,6 +51,7 @@ public class UserCommands {
             role = Role.valueOf(roleName);
         } catch (IllegalArgumentException e) {
             log.error("Cannot find role {}", roleName, e);
+            return "Cannot find role";
         }
         List<Assigment> assigmentList = assigmentRepo.findByProjectProjectId(projectId);
         for (Assigment assigment : assigmentList) {
@@ -58,12 +60,36 @@ public class UserCommands {
                 return "User with id " + userID + " is now a " + roleName + " in project id " + projectId;
             }
         }
-        return "Sorry something goes wrong";
+        return "Cannot set role " + roleName + " to user "+userID+" in project " + projectId;
     }
 
     public boolean checkPermission(String methodName) {
-        return true;
-        //TODO finish function
+        User loggedUser = configurationClass.getUser();
+        if("admin".equals(loggedUser.getLogin())){
+            return true;
+        }
+        //TODO fix (in sytuation when assigment is not created)
+        List<Assigment> assigmentList = assigmentRepo.findByUserUserId(loggedUser.getUserId());
+        if(loggedUser!=null){
+            for (Map.Entry<String, List<String>> entry : permissions.entrySet()) {
+                String key = entry.getKey();
+                List<String> values = entry.getValue();
+
+                if(methodName.equals(key)){
+                    for (Assigment assigment : assigmentList) {
+                        if(assigment.getProject()==configurationClass.getActualProject()){
+                            for (String ok : values) {
+                                System.out.println(assigment.getRole().name());
+                                if(ok.equals(assigment.getRole().name())){
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     @PostConstruct

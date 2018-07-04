@@ -40,6 +40,8 @@ public class LoginCommands {
             password = cryptoPassword.encrypt(password);
             if (password.isEmpty())
                 return "Problem with encryption";
+            System.out.println(login + "  " + password);
+            //TODO check encryption
             User loggedUser = userRepo.findByLoginAndPassword(login, password);
             if (loggedUser == null) {
                 throw new DBException("A user with login " + login + " cannot be found");
