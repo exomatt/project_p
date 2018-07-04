@@ -1,0 +1,6 @@
+"createDocument","Manager","Engineer"
+"findById","Manager","Engineer","HR"
+"updateDocument","?"
+"findAll","Manager","Enginner","HR"
+"deleteById","Manager"
+"findByName","Manager","Engineer","HR"

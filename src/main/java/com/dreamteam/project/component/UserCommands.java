@@ -16,6 +16,9 @@ import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellMethodAvailability;
 
 import javax.annotation.PostConstruct;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 
 @Slf4j
 @ShellComponent
@@ -60,5 +63,33 @@ public class UserCommands {
         }
         //TODO finish function
         return "";
+    }
+
+    public boolean checkPermission(String methodName){
+        String csvFile="UserPermission.csv";
+        String csvSplitBy=",";
+        String line;
+        User loggedUser = configurationClass.getUser();
+
+        try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
+
+
+            while ((line = br.readLine()) != null) {
+
+                String[] permissions = line.split(csvSplitBy);
+
+                if(permissions[0].equals(methodName)){
+                    for (String actual:permissions) {
+                        if(actual.equals("")){
+                            return true;
+                            //TODO End if, check actual with user role in project
+                        }
+                    }
+                }
+            }
+        } catch (IOException e) {
+            log.error("File not found", e);
+        }
+        return false;
     }
 }
