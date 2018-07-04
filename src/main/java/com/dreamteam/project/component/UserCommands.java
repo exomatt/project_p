@@ -38,15 +38,10 @@ public class UserCommands {
     public String addUserToRole(Long userID, Long projectId, String roleName){
         try{
             Project project= projectRepo.findById(projectId).orElseThrow(() -> new DBException("A project with id " + projectId + " cannot be found"));
-        }
-        catch (DBException e){
-            log.error("Cannot find project with id {}", projectId, e);
-        }
-        try{
             User user = userRepo.findById(userID).orElseThrow(()-> new DBException("A user with id " + userID + " cannot be found"));
         }
         catch (DBException e){
-            log.error("Cannot find user with id {}", userID, e);
+            log.error("Cannot find user or project", userID, projectId,e);
         }
         try {
             if(Role.valueOf(roleName)==null){
@@ -55,7 +50,7 @@ public class UserCommands {
         }catch(NullPointerException e){
             log.error("Cannot find role {}", roleName, e);
         }
-        //TO DO finish function
+        //TODO finish function
         return "";
     }
 }
