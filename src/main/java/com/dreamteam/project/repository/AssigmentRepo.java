@@ -6,5 +6,5 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.List;
 
 public interface AssigmentRepo extends CrudRepository<Assigment, Long> {
-        List<Assigment> fingByProject(Long id);
+        List<Assigment> findByProjectProjectId (Long projectId);
 }

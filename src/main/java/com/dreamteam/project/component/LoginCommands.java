@@ -30,7 +30,7 @@ public class LoginCommands {
         this.projectRepo=projectRepo;
     }
 
-    @ShellMethod
+    @ShellMethod("User login")
     public String login(String login, String password){
         try{
             User loggedUser = userRepo.findByLoginAndPassword(login,password);
@@ -45,13 +45,13 @@ public class LoginCommands {
         }
     }
 
-    @ShellMethod
+    @ShellMethod("User logout")
     public String logout(){
         configurationClass.setUser(null);
         return "logout";
     }
 
-    @ShellMethod
+    @ShellMethod("Choose project for user")
     public String chooseProject(Long projectId){
         Project project= null;
         try {
