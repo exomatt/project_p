@@ -34,13 +34,13 @@ public class UserCommands {
     public UserCommands(UserRepo repo, ProjectRepo projectRepo, ConfigurationClass configurationClass) {
         this.userRepo = repo;
         this.projectRepo = projectRepo;
-        this.configurationClass=configurationClass;
+        this.configurationClass = configurationClass;
     }
 
     @ShellMethod("Create new user")
-    public String createNewUser(String lastName, String login, String password){
+    public String createNewUser(String lastName, String login, String password) {
         CryptoPassword cryptoPassword = new CryptoPassword();
-        password=cryptoPassword.encrypt(password);
+        password = cryptoPassword.encrypt(password);
         if (password.isEmpty())
             return "Problem with encryption. User not created";
         User user = new User(lastName, login, password);
@@ -51,28 +51,27 @@ public class UserCommands {
 
 
     @ShellMethod("Add user to role")
-    public String addUserToRole(Long userID, Long projectId, String roleName){
-        try{
-            Project project= projectRepo.findById(projectId).orElseThrow(() -> new DBException("A project with id " + projectId + " cannot be found"));
-            User user = userRepo.findById(userID).orElseThrow(()-> new DBException("A user with id " + userID + " cannot be found"));
-        }
-        catch (DBException e){
-            log.error("Cannot find user or project", userID, projectId,e);
+    public String addUserToRole(Long userID, Long projectId, String roleName) {
+        try {
+            Project project = projectRepo.findById(projectId).orElseThrow(() -> new DBException("A project with id " + projectId + " cannot be found"));
+            User user = userRepo.findById(userID).orElseThrow(() -> new DBException("A user with id " + userID + " cannot be found"));
+        } catch (DBException e) {
+            log.error("Cannot find user or project", userID, projectId, e);
         }
         try {
-            if(Role.valueOf(roleName)==null){
+            if (Role.valueOf(roleName) == null) {
                 throw new NullPointerException();
             }
-        }catch(NullPointerException e){
+        } catch (NullPointerException e) {
             log.error("Cannot find role {}", roleName, e);
         }
         //TODO finish function
         return "";
     }
 
-    public boolean checkPermission(String methodName){
-        String csvFile="UserPermission.csv";
-        String csvSplitBy=",";
+    public boolean checkPermission(String methodName) {
+        String csvFile = "UserPermission.csv";
+        String csvSplitBy = ",";
         String line;
         User loggedUser = configurationClass.getUser();
 
@@ -83,9 +82,9 @@ public class UserCommands {
 
                 String[] permissions = line.split(csvSplitBy);
 
-                if(permissions[0].equals(methodName)){
-                    for (String actual:permissions) {
-                        if(actual.equals("")){
+                if (permissions[0].equals(methodName)) {
+                    for (String actual : permissions) {
+                        if (actual.equals("")) {
                             return true;
                             //TODO End if, check actual with user role in project
                         }
