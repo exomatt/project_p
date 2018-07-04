@@ -1,18 +1,19 @@
 package com.dreamteam.project.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Entity
-@Table
+@Table(name="USER")
 public class User {
     @Id
     @GeneratedValue
+    @Column(name = "USER_ID", nullable = false)
     private Long userId;
+    @Column(name = "USER_NAME", nullable = false)
     private String lastName;
+    @Column(name = "USER_LOGIN", nullable = false,unique = true)
     private String login;
+    @Column(name = "USER_PASSWORD", nullable = false)
     private String password;
 
     public User(){}
