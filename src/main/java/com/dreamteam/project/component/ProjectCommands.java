@@ -8,6 +8,7 @@ import com.dreamteam.project.repository.AssigmentRepo;
 import com.dreamteam.project.repository.ProjectRepo;
 import com.dreamteam.project.repository.UserRepo;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.standard.ShellCommandGroup;
@@ -15,19 +16,29 @@ import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
 
+import javax.annotation.PostConstruct;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 
 @Slf4j
-@AllArgsConstructor(onConstructor = @__(@Autowired))
+//@AllArgsConstructor(onConstructor = @__(@Autowired))
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @ShellComponent
 @ShellCommandGroup("Project commands")
 public class ProjectCommands {
-    private ProjectRepo projectRepo;
-    private AssigmentRepo assigmentRepo;
-    private ConfigurationClass configurationClass;
-    private UserRepo userRepo;
+    private final ProjectRepo projectRepo;
+    private final AssigmentRepo assigmentRepo;
+    private final ConfigurationClass configurationClass;
+    private final UserRepo userRepo;
+    private Map<String, List<String>> permissions = new HashMap<>();
 
     @ShellMethod("Create new project (name, description, creator )")
     public String createProject(String name, String description, long creator) {
@@ -85,5 +96,28 @@ public class ProjectCommands {
         Long id = configurationClass.getUser().getUserId();
         //TODO finished listing
         return "";
+    }
+
+    @PostConstruct
+    public void loadPermission() {
+        String csvFile = "ProjectPermission.csv";
+        String csvSplitBy = ",";
+        String line;
+        try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
+
+            while ((line = br.readLine()) != null) {
+
+                List<String> roles = new ArrayList<>();
+                String[] permission = line.split(csvSplitBy);
+
+                for (int i = 1; i < permission.length; i++) {
+                    roles.add(permission[i]);
+                }
+                permissions.put(permission[0], roles);
+            }
+            System.out.println(permissions);
+        } catch (IOException e) {
+            log.error("File not found", e);
+        }
     }
 }

@@ -13,6 +13,7 @@ import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 
+
 @Slf4j
 @ShellComponent
 @ShellCommandGroup("Login commands")
@@ -64,8 +65,10 @@ public class LoginCommands {
             project = projectRepo.findById(projectId).orElseThrow(() -> new DBException("A project with id " + projectId + " cannot be found"));
         } catch (DBException e) {
             log.error("Cannot find project", projectId, e);
+            return "Cannot find project with id " + projectId;
         }
         configurationClass.setActualProject(project);
         return "Project: " + project.getProjectName();
     }
+
 }

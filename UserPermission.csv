@@ -1,2 +1,2 @@
-"createNewUser","Administrator"
-"addUserToRole,"Administrator,"Manager"
+createNewUser,Administrator
+addUserToRole,Administrator,Manager

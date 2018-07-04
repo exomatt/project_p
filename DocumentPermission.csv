@@ -1,6 +1,6 @@
-"createDocument","Manager","Engineer"
-"findById","Manager","Engineer","HR"
-"updateDocument","?"
-"findAll","Manager","Engineer","HR"
-"deleteById","Manager"
-"findByName","Manager","Engineer","HR"
+createDocument,Manager,Engineer
+findById,Manager,Engineer,HR
+updateDocument,Creator
+findAll,Manager,Engineer,HR
+deleteById,Manager
+findByName,Manager,Engineer,HR

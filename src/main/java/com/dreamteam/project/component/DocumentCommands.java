@@ -1,11 +1,12 @@
 package com.dreamteam.project.component;
 
 import com.dreamteam.project.config.ConfigurationClass;
+import com.dreamteam.project.exeption.DBException;
 import com.dreamteam.project.model.Document;
 import com.dreamteam.project.repository.DocumentRepo;
-import com.dreamteam.project.exeption.DBException;
 import com.dreamteam.project.repository.UserRepo;
-import lombok.AllArgsConstructor;
+import jdk.nashorn.internal.ir.annotations.Ignore;
+import lombok.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.standard.ShellCommandGroup;
@@ -13,18 +14,29 @@ import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @Slf4j
-@AllArgsConstructor(onConstructor = @__(@Autowired))
+//@AllArgsConstructor(onConstructor = @__(@Autowired))
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @ShellComponent
 @ShellCommandGroup("Document commands")
 public class DocumentCommands {
 
-    private DocumentRepo repo;
-    private UserRepo uRepo;
-    private ConfigurationClass configurationClass;
+    private final DocumentRepo repo;
+    private final UserRepo uRepo;
+    private final ConfigurationClass configurationClass;
+    private Map<String, List<String>> permissions = new HashMap<>();
 
     @ShellMethod("Create document")
     public String createDocument(String documentName, String desc, Long creatorId, String topic) {
@@ -100,5 +112,28 @@ public class DocumentCommands {
         return repo.findByCreatorId(userId).stream()
                 .map(Document::toString)
                 .collect(Collectors.joining("\n"));
+    }
+
+    @PostConstruct
+    public void loadPermission() {
+        String csvFile = "DocumentPermission.csv";
+        String csvSplitBy = ",";
+        String line;
+        try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
+
+            while ((line = br.readLine()) != null) {
+
+                List<String> roles = new ArrayList<>();
+                String[] permission = line.split(csvSplitBy);
+
+                for (int i = 1; i < permission.length; i++) {
+                    roles.add(permission[i]);
+                }
+                permissions.put(permission[0], roles);
+            }
+            System.out.println(permissions);
+        } catch (IOException e) {
+            log.error("File not found", e);
+        }
     }
 }
