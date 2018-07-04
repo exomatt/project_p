@@ -20,7 +20,7 @@ public class Project {
     private Long creatorId;
     @Column(name = "PROJECT_DESC", nullable = false)
     private String projectDescription;
-    @OneToMany(fetch = FetchType.LAZY, mappedBy="project")
+    @OneToMany(mappedBy="project")
     private List<Document> documents = new ArrayList<Document>();
 
     public Project(){
