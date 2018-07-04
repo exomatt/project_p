@@ -3,16 +3,22 @@ package com.mycompany.project_p.model;
 import javax.persistence.*;
 
 @Entity
-@Table
+@Table(name="DOCUMENT")
 public class Document {
     @Id
     @GeneratedValue
+    @Column(name = "DOCUMENT_ID", nullable = false)
     private Long documentId;
+    @Column(name = "DOCUMENT_NAME", nullable = false)
     private String documentName;
+    @Column(name = "DOCUMENT_DESC", nullable = false)
     private String documentDescription;
+    @Column(name = "DOCUMENT_CREATOR", nullable = false)
     private Long creatorId;
+    @Column(name = "DOCUMENT_TOPIC", nullable = false)
     private String topic;
     @ManyToOne
+    @JoinColumn(name="PROJECT_ID")
     private Project project;
 
     public Document(){}

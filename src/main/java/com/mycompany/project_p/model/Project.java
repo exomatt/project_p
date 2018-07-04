@@ -10,15 +10,19 @@ import javax.persistence.*;
 
 @Data
 @Entity
-@Table
+@Table(name="PROJECT")
 public class Project {
     @Id
     @GeneratedValue
+    @Column(name = "PROJECT_ID", nullable = false)
     private Long projectId;
+    @Column(name = "PROJECT_NAME", nullable = false)
     private String projectName;
+    @Column(name = "PROJECT_CREATOR", nullable = false)
     private Long creatorId;
+    @Column(name = "PROJECT_DESC", nullable = false)
     private String projectDescription;
-    @OneToMany
+    @OneToMany(fetch = FetchType.LAZY, mappedBy="project",cascade = CascadeType.PERSIST)
     private List<Document> documents = new ArrayList<Document>();
 
     public Project(){
