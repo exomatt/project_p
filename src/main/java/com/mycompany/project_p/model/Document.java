@@ -38,7 +38,21 @@ public class Document {
         this.project=project;
     }
 
+    public Long getDocumentId() {
+        return documentId;
+    }
 
+    public void setDocumentId(Long documentId) {
+        this.documentId = documentId;
+    }
+
+    public Project getProject() {
+        return project;
+    }
+
+    public void setProject(Project project) {
+        this.project = project;
+    }
 
     public void setDocumentName(String documentName) {
         this.documentName = documentName;

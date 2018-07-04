@@ -22,7 +22,7 @@ public class Project {
     private Long creatorId;
     @Column(name = "PROJECT_DESC", nullable = false)
     private String projectDescription;
-    @OneToMany(fetch = FetchType.LAZY, mappedBy="project",cascade = CascadeType.PERSIST)
+    @OneToMany(fetch = FetchType.LAZY, mappedBy="project")
     private List<Document> documents = new ArrayList<Document>();
 
     public Project(){
@@ -41,6 +41,9 @@ public class Project {
         this.documents=documents;
     }
 
+    public void setDocuments(List<Document> documents) {
+        this.documents = documents;
+    }
 
     public String getProjectName() {
         return projectName;
