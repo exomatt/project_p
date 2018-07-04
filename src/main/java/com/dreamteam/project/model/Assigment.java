@@ -3,17 +3,19 @@ package com.dreamteam.project.model;
 import javax.persistence.*;
 
 @Entity
-@Table(name="ASSIGMENT")
+@Table(name = "ASSIGMENT")
 public class Assigment {
+    @Id
+    @GeneratedValue
     @Column(name = "ASSIGMENT_ID", nullable = false)
     private Long assigmentId;
     @OneToOne
-    @JoinColumn(name="USER_ID")
+    @JoinColumn(name = "USER_ID")
     private User user;
 
     private Role role;
     @OneToOne
-    @JoinColumn(name="PROJECT_ID")
+    @JoinColumn(name = "PROJECT_ID")
     private Project project;
 
     public Assigment(Long assigmentId, User user, Role role, Project project) {
