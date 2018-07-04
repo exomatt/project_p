@@ -8,5 +8,6 @@ import java.util.List;
 
 @Repository
 public interface DocumentRepo extends CrudRepository<Document, Long> {
-    List<Document> findByName (String name);
+    List<Document> findByDocumentName (String name);
+    List<Document> findByCreatorId (Long id);
 }

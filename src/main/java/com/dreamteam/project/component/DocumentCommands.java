@@ -1,5 +1,6 @@
 package com.dreamteam.project.component;
 
+import com.dreamteam.project.config.ConfigurationClass;
 import com.dreamteam.project.model.Document;
 import com.dreamteam.project.model.User;
 import com.dreamteam.project.repository.DocumentRepo;
@@ -22,6 +23,7 @@ public class DocumentCommands {
 
     private DocumentRepo repo;
     private UserRepo uRepo;
+    private ConfigurationClass configurationClass;
 
     @Autowired
     public DocumentCommands() {
@@ -85,7 +87,15 @@ public class DocumentCommands {
 
     @ShellMethod("Find documents by name")
     public String findByName(String name) {
-        return repo.findByName(name).stream()
+        return repo.findByDocumentName(name).stream()
+                .map(Document::toString)
+                .collect(Collectors.joining("\n"));
+    }
+
+    @ShellMethod("List documents of current user")
+    public String listUserDocuments() {
+        Long userId = configurationClass.getUser().getUserId();
+        return repo.findByCreatorId(userId).stream()
                 .map(Document::toString)
                 .collect(Collectors.joining("\n"));
     }
