@@ -9,5 +9,5 @@ import java.util.List;
 @Repository
 public interface UserRepo extends CrudRepository<User, Long> {
     List<User> findByName(String findByName);
-
+    User findByLoginAndPassword(String login, String password);
 }

@@ -1,9 +1,9 @@
 package com.mycompany.project_p.model;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
+@Entity
+@Table
 public class Document {
     @Id
     @GeneratedValue
