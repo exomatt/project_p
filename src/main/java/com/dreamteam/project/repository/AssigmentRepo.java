@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface AssigmentRepo extends CrudRepository<Assigment, Long> {
         List<Assigment> findByProjectProjectId (Long projectId);
+        List<Assigment> findByUserUserId(Long userId);
 }
