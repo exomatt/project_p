@@ -2,10 +2,10 @@ package com.dreamteam.project.component;
 
 import com.dreamteam.project.config.ConfigurationClass;
 import com.dreamteam.project.model.Document;
-import com.dreamteam.project.model.User;
 import com.dreamteam.project.repository.DocumentRepo;
 import com.dreamteam.project.exeption.DBException;
 import com.dreamteam.project.repository.UserRepo;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.standard.ShellCommandGroup;
@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @Slf4j
+@AllArgsConstructor(onConstructor = @__(@Autowired))
 @ShellComponent
 @ShellCommandGroup("Document commands")
 public class DocumentCommands {
@@ -25,24 +26,15 @@ public class DocumentCommands {
     private UserRepo uRepo;
     private ConfigurationClass configurationClass;
 
-    @Autowired
-    public DocumentCommands() {
-    }
-
-    public DocumentCommands(DocumentRepo repo) {
-        this.repo = repo;
-    }
-
-
     @ShellMethod("Create document")
     public String createDocument(String documentName, String desc, Long creatorId, String topic) {
         Document document = new Document(null, documentName, desc, creatorId, topic);
         document = repo.save(document);
-        return "Project created succesfully.";
+        return ("Document created succesfully: " + document);
     }
 
     @ShellMethod("Find document by ID")
-    public String findById(Long id) throws DBException {
+    public String findDocumentById(Long id) throws DBException {
         try {
             Document document = repo.findById(id).orElseThrow(() -> new DBException("A person with id " + id + " cannot be found"));
             return "Successfully found document -> " + document;
@@ -53,12 +45,12 @@ public class DocumentCommands {
     }
 
     @ShellMethod("Update document")
-    public String update(Long id, @ShellOption(defaultValue = "") String documentName, @ShellOption(defaultValue = "") String desc, @ShellOption(defaultValue = "-1") String creatorId, @ShellOption(defaultValue = "") String topic) throws DBException {
+    public String updateDocument(Long id, @ShellOption(defaultValue = "") String documentName, @ShellOption(defaultValue = "") String desc, @ShellOption(defaultValue = "-1") String creatorId, @ShellOption(defaultValue = "") String topic) throws DBException {
         try {
             Document document = repo.findById(id).orElseThrow(() -> new DBException("A document with id " + id + " cannot be found"));
             Long creator = Long.parseLong(creatorId);
             if (creator >= 0) {
-                User user = uRepo.findById(creator).orElseThrow(() -> new DBException("A creator with id " + id + " cannot be found"));
+                uRepo.findById(creator).orElseThrow(() -> new DBException("A creator with id " + id + " cannot be found"));
                 document.setCreatorId(creator);
             }
             if (!documentName.isEmpty()) document.setDocumentName(documentName);
@@ -72,21 +64,21 @@ public class DocumentCommands {
         }
     }
 
-    @ShellMethod("Find all documents")
-    public String findAll() {
+    @ShellMethod("List all documents")
+    public String listAllDocuments() {
         return StreamSupport.stream(repo.findAll().spliterator(), false)
                 .map(Document::toString)
                 .collect(Collectors.joining("\n"));
     }
 
     @ShellMethod("Delete document by ID")
-    public String deleteById(Long id) {
+    public String deleteDocumentById(Long id) {
         repo.deleteById(id);
         return "Successfully deleted document with ID " + id;
     }
 
     @ShellMethod("Find documents by name")
-    public String findByName(String name) {
+    public String findDocumentByName(String name) {
         return repo.findByDocumentName(name).stream()
                 .map(Document::toString)
                 .collect(Collectors.joining("\n"));

@@ -2,10 +2,9 @@ package com.dreamteam.project.component;
 
 import com.dreamteam.project.config.ConfigurationClass;
 import com.dreamteam.project.exeption.DBException;
+import com.dreamteam.project.model.Assigment;
 import com.dreamteam.project.model.Project;
-import com.dreamteam.project.model.User;
 import com.dreamteam.project.repository.AssigmentRepo;
-import com.dreamteam.project.repository.DocumentRepo;
 import com.dreamteam.project.repository.ProjectRepo;
 import com.dreamteam.project.repository.UserRepo;
 import lombok.AllArgsConstructor;
@@ -27,7 +26,6 @@ import java.util.stream.StreamSupport;
 public class ProjectCommands {
     private ProjectRepo projectRepo;
     private AssigmentRepo assigmentRepo;
-    private DocumentRepo documentRepo;
     private ConfigurationClass configurationClass;
     private UserRepo userRepo;
 
@@ -45,7 +43,7 @@ public class ProjectCommands {
             Project project = projectRepo.findById(projectId).orElseThrow(() -> new DBException("A project with id " + id + " cannot be found"));
             Long creatorId = Long.parseLong(creator);
             if (creatorId != -1) {
-                User user = userRepo.findById(creatorId).orElseThrow(() -> new DBException("A user  with id " + creator + " cannot be found"));
+                userRepo.findById(creatorId).orElseThrow(() -> new DBException("A user  with id " + creator + " cannot be found"));
                 project.setCreatorId(creatorId);
             }
             if (!name.isEmpty())
@@ -61,17 +59,11 @@ public class ProjectCommands {
     }
 
     @ShellMethod("Show project details - which users are in which roles")
-    public String detailProject(Long id) {
-        try {
-            Project project = projectRepo.findById(id).orElseThrow(() -> new DBException("A project with id " + id + " cannot be found"));
-            //TODO to finished
-
-        } catch (DBException e) {
-            log.error("Cannot find project with id {}", id, e);
-            return "The project with id " + id + " cannot be found";
-        }
-
-        return "mock";
+    public String detailProject() {
+        Project project = configurationClass.getActualProject();
+        return assigmentRepo.findByProjectProjectId(project.getProjectId()).stream()
+                .map(Assigment::toString)
+                .collect(Collectors.joining("\n"));
     }
 
 

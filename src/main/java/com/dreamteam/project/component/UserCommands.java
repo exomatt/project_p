@@ -1,11 +1,10 @@
 package com.dreamteam.project.component;
 
 import com.dreamteam.project.config.ConfigurationClass;
-import com.dreamteam.project.model.Assigment;
+import com.dreamteam.project.crypto.CryptoPassword;
 import com.dreamteam.project.model.Project;
 import com.dreamteam.project.model.Role;
 import com.dreamteam.project.model.User;
-import com.dreamteam.project.repository.AssigmentRepo;
 import com.dreamteam.project.repository.ProjectRepo;
 import com.dreamteam.project.exeption.DBException;
 import com.dreamteam.project.repository.UserRepo;
@@ -18,11 +17,9 @@ import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellMethodAvailability;
 
 import javax.annotation.PostConstruct;
-import javax.validation.constraints.Null;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.List;
 
 @Slf4j
 @ShellComponent
@@ -32,67 +29,64 @@ public class UserCommands {
     private UserRepo userRepo;
     private ProjectRepo projectRepo;
     private ConfigurationClass configurationClass;
-    private AssigmentRepo assigmentRepo;
 
     @Autowired
-    public UserCommands(UserRepo repo, ProjectRepo projectRepo, ConfigurationClass configurationClass, AssigmentRepo assigmentRepo) {
+    public UserCommands(UserRepo repo, ProjectRepo projectRepo, ConfigurationClass configurationClass) {
         this.userRepo = repo;
         this.projectRepo = projectRepo;
-        this.assigmentRepo=assigmentRepo;
-        this.configurationClass=configurationClass;
+        this.configurationClass = configurationClass;
     }
 
     @ShellMethod("Create new user")
-    public String createNewUser(String lastName, String login, String password){
+    public String createNewUser(String lastName, String login, String password) {
+        CryptoPassword cryptoPassword = new CryptoPassword();
+        password = cryptoPassword.encrypt(password);
+        if (password.isEmpty())
+            return "Problem with encryption. User not created";
         User user = new User(lastName, login, password);
         user = userRepo.save(user);
         System.out.println(user.toString());
         return "User created succesfully.";
     }
 
+
     @ShellMethod("Add user to role")
-    public String addUserToRole(Long userID, Long projectId, String roleName){
-        Role role=null;
+    public String addUserToRole(Long userID, Long projectId, String roleName) {
         try {
-            role = Role.valueOf(roleName);
-        }catch(IllegalArgumentException e){
+            Project project = projectRepo.findById(projectId).orElseThrow(() -> new DBException("A project with id " + projectId + " cannot be found"));
+            User user = userRepo.findById(userID).orElseThrow(() -> new DBException("A user with id " + userID + " cannot be found"));
+        } catch (DBException e) {
+            log.error("Cannot find user or project", userID, projectId, e);
+        }
+        try {
+            if (Role.valueOf(roleName) == null) {
+                throw new NullPointerException();
+            }
+        } catch (NullPointerException e) {
             log.error("Cannot find role {}", roleName, e);
         }
-        List<Assigment> assigmentList = assigmentRepo.findByProjectProjectId(projectId);
-        for (Assigment assigment: assigmentList) {
-            if(assigment.getUser().getUserId()==userID&&role!=null){
-                assigment.setRole(role);
-                return "User with id "+ userID + " is now a "+roleName+" in project id "+projectId;
-            }
-        }
-        return "Sorry something goes wrong";
+        //TODO finish function
+        return "";
     }
 
-    public boolean checkPermission(String methodName){
-        String csvFile="UserPermission.csv";
-        String csvSplitBy=",";
+    public boolean checkPermission(String methodName) {
+        String csvFile = "UserPermission.csv";
+        String csvSplitBy = ",";
         String line;
-        List<Assigment> assigmentsList = assigmentRepo.findByProjectProjectId(configurationClass.getActualProject().getProjectId());
+        User loggedUser = configurationClass.getUser();
 
         try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
+
 
             while ((line = br.readLine()) != null) {
 
                 String[] permissions = line.split(csvSplitBy);
 
-                if(assigmentsList==null){
-                    for (String actual:permissions) {
-                        if(actual.equals("Administrator")&&configurationClass.getUser().getLastName().equals("admin")){
+                if (permissions[0].equals(methodName)) {
+                    for (String actual : permissions) {
+                        if (actual.equals("")) {
                             return true;
-                        }
-                    }
-                }
-                if(permissions[0].equals(methodName)){
-                    for (String actual:permissions) {
-                        for (Assigment assigment:assigmentsList) {
-                            if(actual.equals(assigment.getRole().name())){
-                                return true;
-                            }
+                            //TODO End if, check actual with user role in project
                         }
                     }
                 }
