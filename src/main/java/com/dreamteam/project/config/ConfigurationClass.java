@@ -1,5 +1,6 @@
 package com.dreamteam.project.config;
 
+import com.dreamteam.project.crypto.CryptoPassword;
 import com.dreamteam.project.model.Project;
 import com.dreamteam.project.model.User;
 import com.dreamteam.project.repository.UserRepo;
@@ -39,7 +40,13 @@ public class ConfigurationClass {
 
     @PostConstruct
     public void createUser(){
-        admin=new User("admin", "admin", "admin");
+        String password;
+        CryptoPassword cryptoPassword = new CryptoPassword();
+        password = cryptoPassword.encrypt("admin");
+        //TODO Something better than this exeption!! maybe own exeption? / just for demo
+        if (password.isEmpty())
+            throw new RuntimeException();
+        admin=new User("admin", "admin", password);
         userRepo.save(admin);
     }
 }
