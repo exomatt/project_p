@@ -4,6 +4,7 @@ import com.mycompany.project_p.exeption.DBException;
 import com.mycompany.project_p.model.Document;
 import com.mycompany.project_p.repository.DocumentRepo;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.standard.ShellCommandGroup;
@@ -14,12 +15,19 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @Slf4j
-@AllArgsConstructor(onConstructor = @__(@Autowired))
 @ShellComponent
 @ShellCommandGroup("Document commands")
 public class DocumentCommands {
 
     private DocumentRepo repo;
+    @Autowired
+    public DocumentCommands() {
+    }
+
+    public DocumentCommands(DocumentRepo repo) {
+        this.repo = repo;
+    }
+
 
     @ShellMethod("Create document")
     public String createDocument(String documentName, String desc, Long creatorId, String topic){

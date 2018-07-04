@@ -11,7 +11,7 @@
 .sts4-cache
 
 *.log
-
+*.db
 ### IntelliJ IDEA ###
 .idea
 *.iws
