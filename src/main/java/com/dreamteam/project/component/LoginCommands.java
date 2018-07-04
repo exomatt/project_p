@@ -17,12 +17,12 @@ public class LoginCommands {
 
     private ConfigurationClass configurationClass;
 
-    @Autowired
     private UserRepo userRepo;
 
     @Autowired
-    public LoginCommands(ConfigurationClass configurationClass){
+    public LoginCommands(ConfigurationClass configurationClass, UserRepo userRepo){
         this.configurationClass= configurationClass;
+        this.userRepo=userRepo;
     }
 
     @ShellMethod
