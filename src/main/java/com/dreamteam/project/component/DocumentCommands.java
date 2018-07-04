@@ -49,10 +49,20 @@ public class DocumentCommands {
         try {
             Document document = repo.findById(id).orElseThrow(() -> new DBException("A document with id " + id + " cannot be found"));
             Long creator = Long.parseLong(creatorId);
+            //TODO
+            /*What is a better way to validate (without further usage of the object) weather an object is in the database?
+
+            //  1
             if (creator >= 0) {
                 uRepo.findById(creator).orElseThrow(() -> new DBException("A creator with id " + id + " cannot be found"));
                 document.setCreatorId(creator);
             }
+
+            //  2
+            if (creator >= 0 && uRepo.existsById(creator)) {
+                document.setCreatorId(creator);
+            }
+            */
             if (!documentName.isEmpty()) document.setDocumentName(documentName);
             if (!desc.isEmpty()) document.setDocumentDescription(desc);
             if (!topic.isEmpty()) document.setTopic(topic);
