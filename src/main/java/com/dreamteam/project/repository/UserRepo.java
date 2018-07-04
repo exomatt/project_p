@@ -1,6 +1,6 @@
-package com.mycompany.project_p.repository;
+package com.dreamteam.project.repository;
 
-import com.mycompany.project_p.model.User;
+import com.dreamteam.project.model.User;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

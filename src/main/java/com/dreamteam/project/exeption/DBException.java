@@ -1,4 +1,4 @@
-package com.mycompany.project_p.exeption;
+package com.dreamteam.project.exeption;
 
 public class DBException extends Exception {
     public DBException(String message) {

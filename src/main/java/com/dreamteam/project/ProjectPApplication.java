@@ -1,4 +1,4 @@
-package com.mycompany.project_p;
+package com.dreamteam.project;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

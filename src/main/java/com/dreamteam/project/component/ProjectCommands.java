@@ -1,11 +1,11 @@
-package com.mycompany.project_p.component;
+package com.dreamteam.project.component;
 
-import com.mycompany.project_p.exeption.DBException;
-import com.mycompany.project_p.model.Document;
-import com.mycompany.project_p.model.Project;
-import com.mycompany.project_p.repository.AssigmentRepo;
-import com.mycompany.project_p.repository.DocumentRepo;
-import com.mycompany.project_p.repository.ProjectRepo;
+import com.dreamteam.project.exeption.DBException;
+import com.dreamteam.project.model.Document;
+import com.dreamteam.project.model.Project;
+import com.dreamteam.project.repository.AssigmentRepo;
+import com.dreamteam.project.repository.DocumentRepo;
+import com.dreamteam.project.repository.ProjectRepo;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

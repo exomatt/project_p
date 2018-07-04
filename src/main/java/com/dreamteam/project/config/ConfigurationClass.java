@@ -1,8 +1,7 @@
-package com.mycompany.project_p.config;
+package com.dreamteam.project.config;
 
-import com.mycompany.project_p.model.User;
-import com.mycompany.project_p.repository.UserRepo;
-import org.springframework.beans.factory.InitializingBean;
+import com.dreamteam.project.model.User;
+import com.dreamteam.project.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 

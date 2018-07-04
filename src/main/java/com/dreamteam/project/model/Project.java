@@ -1,8 +1,6 @@
-package com.mycompany.project_p.model;
-import lombok.AllArgsConstructor;
+package com.dreamteam.project.model;
 import lombok.Data;
-import lombok.Generated;
-import lombok.NoArgsConstructor;
+
 import java.util.ArrayList;
 import java.util.List;
 

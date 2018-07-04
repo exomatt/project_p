@@ -1,4 +1,4 @@
-package com.mycompany.project_p.model;
+package com.dreamteam.project.model;
 
 public enum Role {
     Manager,

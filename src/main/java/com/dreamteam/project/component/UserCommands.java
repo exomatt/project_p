@@ -1,18 +1,16 @@
-package com.mycompany.project_p.component;
+package com.dreamteam.project.component;
 
-import com.mycompany.project_p.exeption.DBException;
-import com.mycompany.project_p.model.Project;
-import com.mycompany.project_p.model.Role;
-import com.mycompany.project_p.model.User;
-import com.mycompany.project_p.repository.ProjectRepo;
-import com.mycompany.project_p.repository.UserRepo;
+import com.dreamteam.project.model.Project;
+import com.dreamteam.project.model.Role;
+import com.dreamteam.project.model.User;
+import com.dreamteam.project.repository.ProjectRepo;
+import com.dreamteam.project.exeption.DBException;
+import com.dreamteam.project.repository.UserRepo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
-
-import java.util.Optional;
 
 @Slf4j
 @ShellComponent

@@ -1,4 +1,4 @@
-package com.mycompany.project_p;
+package com.dreamteam.project;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
