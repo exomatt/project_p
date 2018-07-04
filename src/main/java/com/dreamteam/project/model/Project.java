@@ -6,7 +6,7 @@ import java.util.List;
 
 import javax.persistence.*;
 
-@Data
+
 @Entity
 @Table(name="PROJECT")
 public class Project {
