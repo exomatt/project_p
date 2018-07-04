@@ -1,5 +1,6 @@
 package com.dreamteam.project.component;
 
+import com.dreamteam.project.config.ConfigurationClass;
 import com.dreamteam.project.exeption.DBException;
 import com.dreamteam.project.model.Document;
 import com.dreamteam.project.model.Project;
@@ -26,7 +27,7 @@ public class ProjectCommands {
     private ProjectRepo projectRepo;
     private AssigmentRepo assigmentRepo;
     private DocumentRepo documentRepo;
-
+    private ConfigurationClass  configurationClass;
     @ShellMethod("Create new project (name, description, creator )")
     public String createProject(String name, String description, long creator) {
         Project project = new Project(null, name, creator, description);
@@ -72,32 +73,16 @@ public class ProjectCommands {
     }
 
     @ShellMethod("Get list of projects")
-    public String listProject() {
+    public String listAllProject() {
         return StreamSupport.stream(projectRepo.findAll().spliterator(), false)
                 .map(Project::toString)
                 .collect(Collectors.joining("\n"));
     }
 
-    @ShellMethod("Ad document do project (project ID , document ID)")
-    public String addDocument(Long projectId, Long documentId) {
-        Project project;
-        Document document;
-        try {
-            document = documentRepo.findById(documentId).orElseThrow(() -> new DBException("A document with id " + id + " cannot be found"));
-        } catch (DBException e) {
-            log.error("Cannot find document with id {}", id, e);
-            return "The document with id " + id + " cannot be found";
-        }
-
-        try {
-            project = projectRepo.findById(projectId).orElseThrow(() -> new DBException("A project with id " + id + " cannot be found"));
-        } catch (DBException d) {
-            log.error("Cannot find project with id {}", id, d);
-            return "The project with id " + id + " cannot be found";
-        }
-        project.addToList(document);
-        document.setProject(project);
-
-        return "";
+    @ShellMethod("Get list of projects of current user")
+    public String listProject(){
+        Long id = configurationClass.getUser().getUserId();
+        //TODO finished listing
+        return"";
     }
 }

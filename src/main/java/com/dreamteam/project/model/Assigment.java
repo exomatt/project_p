@@ -12,7 +12,7 @@ public class Assigment {
     @OneToOne
     @JoinColumn(name = "USER_ID")
     private User user;
-
+    @Enumerated(EnumType.STRING)
     private Role role;
     @OneToOne
     @JoinColumn(name = "PROJECT_ID")

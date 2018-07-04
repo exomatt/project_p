@@ -28,6 +28,10 @@ public class User {
         return lastName;
     }
 
+    public Long getUserId() {
+        return userId;
+    }
+
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
