@@ -26,15 +26,6 @@ public class DocumentCommands {
     private UserRepo uRepo;
     private ConfigurationClass configurationClass;
 
-    @Autowired
-    public DocumentCommands() {
-    }
-
-    public DocumentCommands(DocumentRepo repo) {
-        this.repo = repo;
-    }
-
-
     @ShellMethod("Create document")
     public String createDocument(String documentName, String desc, Long creatorId, String topic) {
         Document document = new Document(null, documentName, desc, creatorId, topic);
