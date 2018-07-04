@@ -1,6 +1,7 @@
 package com.dreamteam.project.component;
 
 import com.dreamteam.project.config.ConfigurationClass;
+import com.dreamteam.project.crypto.CryptoPassword;
 import com.dreamteam.project.model.Project;
 import com.dreamteam.project.model.User;
 import com.dreamteam.project.exeption.DBException;
@@ -33,6 +34,10 @@ public class LoginCommands {
     @ShellMethod("User login")
     public String login(String login, String password){
         try{
+            CryptoPassword cryptoPassword = new CryptoPassword();
+            password=cryptoPassword.encrypt(password);
+            if (password.isEmpty())
+                return "Problem with encryption";
             User loggedUser = userRepo.findByLoginAndPassword(login,password);
             if(loggedUser==null){
                 throw new DBException("A user with login " + login + " cannot be found");

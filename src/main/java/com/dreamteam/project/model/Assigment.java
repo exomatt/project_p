@@ -60,10 +60,8 @@ public class Assigment {
     @Override
     public String toString() {
         return "Assigment{" +
-                "assigmentId=" + assigmentId +
-                ", user=" + user +
+                "user=" + user +
                 ", role=" + role +
-                ", project=" + project +
                 '}';
     }
 }
