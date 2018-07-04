@@ -21,7 +21,7 @@ public class Project {
     @Column(name = "PROJECT_DESC", nullable = false)
     private String projectDescription;
     @OneToMany(mappedBy="project")
-    private List<Document> documents = new ArrayList<Document>();
+    private List<Document> documents = new ArrayList<>();
 
     public Project(){
 
@@ -74,13 +74,6 @@ public class Project {
         this.creatorId = creatorId;
     }
 
-    public Long getProjectId() {
-        return projectId;
-    }
-
-    public void setProjectId(Long projectId) {
-        this.projectId = projectId;
-    }
 
     public List<Document> getDocuments() {
         return documents;
