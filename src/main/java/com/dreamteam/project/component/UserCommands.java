@@ -37,7 +37,7 @@ public class UserCommands {
         this.configurationClass = configurationClass;
     }
 
-    @ShellMethod("Create new user")
+    @ShellMethod("Create new user ( lastName, login, password)")
     public String createNewUser(String lastName, String login, String password) {
         CryptoPassword cryptoPassword = new CryptoPassword();
         password = cryptoPassword.encrypt(password);
@@ -50,7 +50,7 @@ public class UserCommands {
     }
 
 
-    @ShellMethod("Add user to role")
+    @ShellMethod("Add user to role (userID, projectID, roleName)")
     public String addUserToRole(Long userID, Long projectId, String roleName) {
         try {
             Project project = projectRepo.findById(projectId).orElseThrow(() -> new DBException("A project with id " + projectId + " cannot be found"));
