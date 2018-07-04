@@ -34,7 +34,7 @@ public class DocumentCommands {
     }
 
     @ShellMethod("Find document by ID")
-    public String findById(Long id) throws DBException {
+    public String findDocumentById(Long id) throws DBException {
         try {
             Document document = repo.findById(id).orElseThrow(() -> new DBException("A person with id " + id + " cannot be found"));
             return "Successfully found document -> " + document;
@@ -45,7 +45,7 @@ public class DocumentCommands {
     }
 
     @ShellMethod("Update document")
-    public String update(Long id, @ShellOption(defaultValue = "") String documentName, @ShellOption(defaultValue = "") String desc, @ShellOption(defaultValue = "-1") String creatorId, @ShellOption(defaultValue = "") String topic) throws DBException {
+    public String updateDocument(Long id, @ShellOption(defaultValue = "") String documentName, @ShellOption(defaultValue = "") String desc, @ShellOption(defaultValue = "-1") String creatorId, @ShellOption(defaultValue = "") String topic) throws DBException {
         try {
             Document document = repo.findById(id).orElseThrow(() -> new DBException("A document with id " + id + " cannot be found"));
             Long creator = Long.parseLong(creatorId);
@@ -64,21 +64,21 @@ public class DocumentCommands {
         }
     }
 
-    @ShellMethod("Find all documents")
-    public String findAll() {
+    @ShellMethod("List all documents")
+    public String listAllDocuments() {
         return StreamSupport.stream(repo.findAll().spliterator(), false)
                 .map(Document::toString)
                 .collect(Collectors.joining("\n"));
     }
 
     @ShellMethod("Delete document by ID")
-    public String deleteById(Long id) {
+    public String deleteDocumentById(Long id) {
         repo.deleteById(id);
         return "Successfully deleted document with ID " + id;
     }
 
     @ShellMethod("Find documents by name")
-    public String findByName(String name) {
+    public String findDocumentByName(String name) {
         return repo.findByDocumentName(name).stream()
                 .map(Document::toString)
                 .collect(Collectors.joining("\n"));
