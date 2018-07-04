@@ -39,6 +39,14 @@ public class Project {
         this.documents=documents;
     }
 
+    public Long getProjectId() {
+        return projectId;
+    }
+
+    public void setProjectId(Long projectId) {
+        this.projectId = projectId;
+    }
+
     public void setDocuments(List<Document> documents) {
         this.documents = documents;
     }
