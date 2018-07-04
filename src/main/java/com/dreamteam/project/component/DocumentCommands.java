@@ -1,8 +1,10 @@
 package com.dreamteam.project.component;
 
 import com.dreamteam.project.model.Document;
+import com.dreamteam.project.model.User;
 import com.dreamteam.project.repository.DocumentRepo;
 import com.dreamteam.project.exeption.DBException;
+import com.dreamteam.project.repository.UserRepo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.standard.ShellCommandGroup;
@@ -19,6 +21,7 @@ import java.util.stream.StreamSupport;
 public class DocumentCommands {
 
     private DocumentRepo repo;
+    private UserRepo uRepo;
 
     @Autowired
     public DocumentCommands() {
@@ -50,17 +53,17 @@ public class DocumentCommands {
     @ShellMethod("Update document")
     public String update(Long id, @ShellOption(defaultValue = "") String documentName, @ShellOption(defaultValue = "") String desc, @ShellOption(defaultValue = "-1") String creatorId, @ShellOption(defaultValue = "") String topic) throws DBException {
         try {
-            Document document = repo.findById(id).orElseThrow(() -> new DBException("A person with id " + id + " cannot be found"));
+            Document document = repo.findById(id).orElseThrow(() -> new DBException("A document with id " + id + " cannot be found"));
             Long creator = Long.parseLong(creatorId);
-            if (creator >= 0) document.setCreatorId(creator);
+            if (creator >= 0) {
+                User user = uRepo.findById(creator).orElseThrow(() -> new DBException("A creator with id " + id + " cannot be found"));
+                document.setCreatorId(creator);
+            }
             if (!documentName.isEmpty()) document.setDocumentName(documentName);
             if (!desc.isEmpty()) document.setDocumentDescription(desc);
             if (!topic.isEmpty()) document.setTopic(topic);
             document = repo.save(document);
             return "Successfully updated the document -> " + document;
-        } catch (DBException exception) {
-            log.error("Cannot find document with id {}", id, exception);
-            return "The document with id " + id + " cannot be updated because it cannot be found";
         } catch (NumberFormatException exception) {
             log.error("CreatorId {} is not a number", id, exception);
             return "CreatorId " + id + " is not a number, document cannot be updated";
