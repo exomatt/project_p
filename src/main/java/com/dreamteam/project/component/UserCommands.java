@@ -1,6 +1,7 @@
 package com.dreamteam.project.component;
 
 import com.dreamteam.project.config.ConfigurationClass;
+import com.dreamteam.project.crypto.CryptoPassword;
 import com.dreamteam.project.model.Assigment;
 import com.dreamteam.project.model.Role;
 import com.dreamteam.project.model.User;
@@ -37,6 +38,10 @@ public class UserCommands {
 
     @ShellMethod("Create new user (lastName, login, password)")
     public String createNewUser(String lastName, String login, String password) {
+        CryptoPassword cryptoPassword = new CryptoPassword();
+        password = cryptoPassword.encrypt(password);
+        if (password.isEmpty())
+            return "Problem with encryption";
         //System.out.println(checkPermission(new Object(){}.getClass().getEnclosingMethod().getName()));
         User user = new User(null, lastName, login, password);
         user = userRepo.save(user);

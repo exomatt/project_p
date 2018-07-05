@@ -34,6 +34,7 @@ public class LoginCommands {
                 return "Problem with encryption";
             System.out.println(login + "  " + password);
             User loggedUser = userRepo.findByLoginAndPassword(login, password);
+            System.out.println("Found user:"+ loggedUser.toString());
             if (loggedUser == null) {
                 throw new DBException("A user with login " + login + " cannot be found");
             }
