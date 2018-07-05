@@ -39,32 +39,31 @@ public class ProjectCommands {
     private final UserRepo userRepo;
     private Map<String, List<String>> permissions = new HashMap<>();
 
-    @ShellMethod("Create new project (name, description, creator )")
-    public String createProject(String name, String description, long creator) {
+    @ShellMethod("Create new project (name, description)")
+    public String createProject(String name, String description) {
+        Long creator = configurationClass.getUser().getUserId();
         Project project = new Project(null, name, creator, description);
         project = projectRepo.save(project);
         return project.toString();
     }
 
-    @ShellMethod("Update project (id, name, description, creator )")
-    public String updateProject(@ShellOption(defaultValue = "-1") String id, @ShellOption(defaultValue = "") String name, @ShellOption(defaultValue = "") String description, String creator) throws DBException {
+    @ShellMethod("Update project (id, name, description)")
+    public String updateProject(@ShellOption(defaultValue = "-1") String id, @ShellOption(defaultValue = "") String name, @ShellOption(defaultValue = "") String description) throws DBException {
         try {
             Long projectId = Long.parseLong(id);
             Project project = projectRepo.findById(projectId).orElseThrow(() -> new DBException("A project with id " + id + " cannot be found"));
-            Long creatorId = Long.parseLong(creator);
-            if (creatorId != -1) {
-                userRepo.findById(creatorId).orElseThrow(() -> new DBException("A user  with id " + creator + " cannot be found"));
-                project.setCreatorId(creatorId);
-            }
             if (!name.isEmpty())
                 project.setProjectName(name);
             if (!description.isEmpty())
                 project.setProjectDescription(description);
             project = projectRepo.save(project);
-            return project.toString();
+            return "Successfully updated the project -> " + project.toString();
         } catch (NumberFormatException exn) {
             log.error("Error in parsing id", exn);
             return "Wrong id format";
+        } catch (DBException exception) {
+            log.error("Cannot find project with id {}", id, exception);
+            return "The project with id " + id + " cannot be found";
         }
     }
 

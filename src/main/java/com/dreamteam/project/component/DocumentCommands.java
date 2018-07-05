@@ -55,14 +55,15 @@ public class DocumentCommands {
     }
 
     @ShellMethod("Update document")
-    public String updateDocument(Long id, @ShellOption(defaultValue = "") String documentName, @ShellOption(defaultValue = "") String desc, @ShellOption(defaultValue = "") String topic) throws DBException {
+    public String updateDocument(@ShellOption(defaultValue = "-1") String docId, @ShellOption(defaultValue = "") String documentName, @ShellOption(defaultValue = "") String desc, @ShellOption(defaultValue = "") String topic) throws DBException {
+        Long id = Long.parseLong(docId);
         try {
             Document document = repo.findById(id).orElseThrow(() -> new DBException("A document with id " + id + " cannot be found"));
             if (!documentName.isEmpty()) document.setDocumentName(documentName);
             if (!desc.isEmpty()) document.setDocumentDescription(desc);
             if (!topic.isEmpty()) document.setTopic(topic);
             document = repo.save(document);
-            return "Successfully updated the document -> " + document;
+            return "Successfully updated the document -> " + document.toString();
         } catch (DBException exception) {
             log.error("Cannot find document with id {}", id, exception);
             return "The document with id " + id + " cannot be found";
