@@ -5,8 +5,7 @@ import com.dreamteam.project.exeption.DBException;
 import com.dreamteam.project.model.Document;
 import com.dreamteam.project.repository.DocumentRepo;
 import com.dreamteam.project.repository.UserRepo;
-import jdk.nashorn.internal.ir.annotations.Ignore;
-import lombok.*;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.standard.ShellCommandGroup;
@@ -15,7 +14,6 @@ import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
 
 import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -37,8 +35,9 @@ public class DocumentCommands {
     private final ConfigurationClass configurationClass;
     private Map<String, List<String>> permissions = new HashMap<>();
 
-    @ShellMethod("Create document (documentName, description, creatorID, topic)")
-    public String createDocument(String documentName, String desc, Long creatorId, String topic) {
+    @ShellMethod("Create document (documentName, description, topic)")
+    public String createDocument(String documentName, String desc, String topic) {
+        Long creatorId = configurationClass.getUser().getUserId();
         Document document = new Document(null, documentName, desc, creatorId, topic);
         document = repo.save(document);
         return ("Document created succesfully: " + document);
@@ -56,32 +55,17 @@ public class DocumentCommands {
     }
 
     @ShellMethod("Update document")
-    public String updateDocument(Long id, @ShellOption(defaultValue = "") String documentName, @ShellOption(defaultValue = "") String desc, @ShellOption(defaultValue = "-1") String creatorId, @ShellOption(defaultValue = "") String topic) throws DBException {
+    public String updateDocument(Long id, @ShellOption(defaultValue = "") String documentName, @ShellOption(defaultValue = "") String desc, @ShellOption(defaultValue = "") String topic) throws DBException {
         try {
             Document document = repo.findById(id).orElseThrow(() -> new DBException("A document with id " + id + " cannot be found"));
-            Long creator = Long.parseLong(creatorId);
-            //TODO
-            /*What is a better way to validate (without further usage of the object) weather an object is in the database?
-
-            //  1
-            if (creator >= 0) {
-                uRepo.findById(creator).orElseThrow(() -> new DBException("A creator with id " + id + " cannot be found"));
-                document.setCreatorId(creator);
-            }
-
-            //  2
-            if (creator >= 0 && uRepo.existsById(creator)) {
-                document.setCreatorId(creator);
-            }
-            */
             if (!documentName.isEmpty()) document.setDocumentName(documentName);
             if (!desc.isEmpty()) document.setDocumentDescription(desc);
             if (!topic.isEmpty()) document.setTopic(topic);
             document = repo.save(document);
             return "Successfully updated the document -> " + document;
-        } catch (NumberFormatException exception) {
-            log.error("CreatorId {} is not a number", id, exception);
-            return "CreatorId " + id + " is not a number, document cannot be updated";
+        } catch (DBException exception) {
+            log.error("Cannot find document with id {}", id, exception);
+            return "The document with id " + id + " cannot be found";
         }
     }
 
