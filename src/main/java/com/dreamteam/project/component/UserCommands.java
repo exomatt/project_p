@@ -84,7 +84,7 @@ public class UserCommands {
                     return "User with id " + userID + " is now a " + roleName + " in project id " + projectId;
                 }
             }
-            return "Cannot set role " + roleName + " to user "+userID+" in project " + projectId;
+            return "Cannot set role " + roleName + " to user " + userID + " in project " + projectId;
         } catch (IllegalArgumentException e) {
             log.error("Cannot find role {}", roleName, e);
             return "Cannot find role";

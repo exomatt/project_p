@@ -11,8 +11,10 @@ import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.shell.Availability;
-import org.springframework.shell.standard.*;
+import org.springframework.shell.standard.ShellCommandGroup;
+import org.springframework.shell.standard.ShellComponent;
+import org.springframework.shell.standard.ShellMethod;
+import org.springframework.shell.standard.ShellOption;
 
 import javax.annotation.PostConstruct;
 import java.io.BufferedReader;
@@ -37,19 +39,11 @@ public class ProjectCommands {
     private final UserRepo userRepo;
     private Map<String, List<String>> permissions = new HashMap<>();
 
-    @ShellMethod("Create new project (name, description, creatorID )")
+    @ShellMethod("Create new project (name, description, creator )")
     public String createProject(String name, String description, long creator) {
         Project project = new Project(null, name, creator, description);
         project = projectRepo.save(project);
         return project.toString();
-    }
-
-    @ShellMethodAvailability
-    public Availability createProjectAvailability(){
-        if(configurationClass.checkPermission(new Object(){}.getClass().getEnclosingMethod().getName(), permissions)){
-            return Availability.available();
-        }
-        return Availability.unavailable("Acces denied");
     }
 
     @ShellMethod("Update project (id, name, description, creator )")
