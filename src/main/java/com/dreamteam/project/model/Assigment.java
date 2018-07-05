@@ -18,6 +18,9 @@ public class Assigment {
     @JoinColumn(name = "PROJECT_ID")
     private Project project;
 
+    public Assigment() {
+    }
+
     public Assigment(Long assigmentId, User user, Role role, Project project) {
         this.assigmentId = assigmentId;
         this.user = user;

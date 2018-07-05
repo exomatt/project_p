@@ -2,7 +2,9 @@ package com.dreamteam.project.component;
 
 import com.dreamteam.project.config.ConfigurationClass;
 import com.dreamteam.project.crypto.CryptoPassword;
+import com.dreamteam.project.exeption.DBException;
 import com.dreamteam.project.model.Assigment;
+import com.dreamteam.project.model.Project;
 import com.dreamteam.project.model.Role;
 import com.dreamteam.project.model.User;
 import com.dreamteam.project.repository.AssigmentRepo;
@@ -51,40 +53,70 @@ public class UserCommands {
     }
 
     @ShellMethodAvailability
-    public Availability createNewUserAvailavility(){
-        if(configurationClass.checkPermission(new Object(){}.getClass().getEnclosingMethod().getName(), permissions)){
+    public Availability createNewUserAvailavility() {
+        if (configurationClass.checkPermission(new Object() {
+        }.getClass().getEnclosingMethod().getName(), permissions)) {
             return Availability.available();
         }
         return Availability.unavailable("Acces denied");
     }
 
     @ShellMethod("Show users")//Access only for admin
-    public void showUsers(){
+    public void showUsers() {
         List<User> userList = userRepo.findAll();
-        for (User user: userList) {
+        for (User user : userList) {
             System.out.println(user.toString());
         }
     }
+
     @ShellMethodAvailability
-    public Availability showUsersAvailavility(){
-        if(configurationClass.checkPermission(new Object(){}.getClass().getEnclosingMethod().getName(), permissions)){
+    public Availability showUsersAvailavility() {
+        if (configurationClass.checkPermission(new Object() {
+        }.getClass().getEnclosingMethod().getName(), permissions)) {
             return Availability.available();
         }
         return Availability.unavailable("Acces denied");
     }
 
-    @ShellMethod("Add user to role (userID, projectID, roleName)")
-    public String addUserToRole(Long userID, Long projectId, String roleName) {
+    @ShellMethod("Add user to role (userLogin, roleName)")
+    public String addUserToProject(String userLogin, String roleName) {
         try {
             Role role = Role.valueOf(roleName);
-            List<Assigment> assigmentList = assigmentRepo.findByProjectProjectId(projectId);
-            for (Assigment assigment : assigmentList) {
-                if (assigment.getUser().getUserId() == userID && role != null) {
-                    assigment.setRole(role);
-                    return "User with id " + userID + " is now a " + roleName + " in project id " + projectId;
-                }
-            }
-            return "Cannot set role " + roleName + " to user " + userID + " in project " + projectId;
+            Project project = configurationClass.getActualProject();
+            if (project == null)
+                return "Project is not choosen";
+            User user = userRepo.findByLogin(userLogin);
+            if (user == null)
+                return "User with that login dont exist";
+            Long userID = user.getUserId();
+            Assigment assigments = assigmentRepo.findByUserUserIdAndProjectProjectIdAndRole(userID, project.getProjectId(), role);
+            if (assigments != null)
+                return "Cannot set role " + roleName + " to user " + userID + " in project " + project.getProjectId();
+            Assigment assigment = new Assigment(null, user, role, project);
+            assigmentRepo.save(assigment);
+            return "User add to  " + assigment.toString();
+        } catch (IllegalArgumentException e) {
+            log.error("Cannot find role {}", roleName, e);
+            return "Cannot find role";
+        }
+    }
+
+    @ShellMethod("Delete user role in project")
+    public String deleteUserRole(String userLogin, String roleName) {
+        try {
+            Role role = Role.valueOf(roleName);
+            Project project = configurationClass.getActualProject();
+            if (project == null)
+                return "Project is not choosen";
+            User user = userRepo.findByLogin(userLogin);
+            if (user == null)
+                return "User with that login dont exist";
+            Long userID = user.getUserId();
+            Assigment assigment = assigmentRepo.findByUserUserIdAndProjectProjectIdAndRole(userID, project.getProjectId(), role);
+            if (assigment==null)
+                return "Cannot delete role " + roleName + " to user " + userID + " in project " + project.getProjectId();
+            assigmentRepo.delete(assigment);
+            return "User deleted from " + assigment.toString();
         } catch (IllegalArgumentException e) {
             log.error("Cannot find role {}", roleName, e);
             return "Cannot find role";
@@ -92,12 +124,14 @@ public class UserCommands {
     }
 
     @ShellMethodAvailability
-    public Availability addUserToRoleAvailavility(){
-        if(configurationClass.checkPermission(new Object(){}.getClass().getEnclosingMethod().getName(), permissions)){
+    public Availability addUserToRoleAvailavility() {
+        if (configurationClass.checkPermission(new Object() {
+        }.getClass().getEnclosingMethod().getName(), permissions)) {
             return Availability.available();
         }
         return Availability.unavailable("Acces denied");
     }
+
 
     @PostConstruct
     public void loadPermissions() {
