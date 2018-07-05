@@ -3,6 +3,7 @@ package com.dreamteam.project.component;
 import com.dreamteam.project.config.ConfigurationClass;
 import com.dreamteam.project.exeption.DBException;
 import com.dreamteam.project.model.Document;
+import com.dreamteam.project.model.Project;
 import com.dreamteam.project.repository.DocumentRepo;
 import com.dreamteam.project.repository.UserRepo;
 import lombok.RequiredArgsConstructor;
@@ -32,7 +33,8 @@ public class DocumentCommands {
     @ShellMethod("Create document (documentName, description, topic)")
     public String createDocument(String documentName, String desc, String topic) {
         Long creatorId = configurationClass.getUser().getUserId();
-        Document document = new Document(null, documentName, desc, creatorId, topic);
+        Project project = configurationClass.getActualProject();
+        Document document = new Document(null, documentName, desc, creatorId, topic, project);
         document = repo.save(document);
         return ("Document created succesfully: " + document);
     }
