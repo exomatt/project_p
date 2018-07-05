@@ -92,8 +92,22 @@ public class ProjectCommands {
     @ShellMethod("Get list of projects of current user")
     public String listProject() {
         Long id = configurationClass.getUser().getUserId();
-        //TODO finished listing
-        return "";
+        try {
+            List<Assigment> assigments = assigmentRepo.findByUserUserId(id);
+            String projects = "Your projects: ";
+            if (!assigments.isEmpty()) {
+
+                for (Assigment ass : assigments) {
+                    projects = projects.concat("\n" + ass.getProject().toString());
+                }
+                return projects;
+            } else {
+                return "You have no projects";
+            }
+        } catch (IllegalArgumentException e) {
+            log.error("You are not logged in", e);
+            return "Cannot find role";
+        }
     }
 
     @PostConstruct
