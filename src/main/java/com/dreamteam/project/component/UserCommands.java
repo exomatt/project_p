@@ -14,10 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.Availability;
-import org.springframework.shell.standard.ShellCommandGroup;
-import org.springframework.shell.standard.ShellComponent;
-import org.springframework.shell.standard.ShellMethod;
-import org.springframework.shell.standard.ShellMethodAvailability;
+import org.springframework.shell.standard.*;
 
 import javax.annotation.PostConstruct;
 import java.util.HashMap;
@@ -49,11 +46,12 @@ public class UserCommands {
     }
 
     @ShellMethodAvailability
-    public Availability createNewUserAvailability(){
-        if(configurationClass.getUser()==null){
+    public Availability createNewUserAvailability() {
+        if (configurationClass.getUser() == null) {
             return Availability.unavailable("No one is logged");
         }
-        if(configurationClass.checkPermission(new Object(){}.getClass().getEnclosingMethod().getName(), permissions)){
+        if (configurationClass.checkPermission(new Object() {
+        }.getClass().getEnclosingMethod().getName(), permissions)) {
             return Availability.available();
         }
         return Availability.unavailable("Access denied");
@@ -68,11 +66,12 @@ public class UserCommands {
     }
 
     @ShellMethodAvailability
-    public Availability showUsersAvailability(){
-        if(configurationClass.getUser()==null){
+    public Availability showUsersAvailability() {
+        if (configurationClass.getUser() == null) {
             return Availability.unavailable("No one is logged");
         }
-        if(configurationClass.checkPermission(new Object(){}.getClass().getEnclosingMethod().getName(), permissions)){
+        if (configurationClass.checkPermission(new Object() {
+        }.getClass().getEnclosingMethod().getName(), permissions)) {
             return Availability.available();
         }
         return Availability.unavailable("Access denied");
@@ -102,17 +101,44 @@ public class UserCommands {
     }
 
     @ShellMethodAvailability
-    public Availability addUserToProjectAvailability(){
-        if(configurationClass.getUser()==null){
+    public Availability addUserToProjectAvailability() {
+        if (configurationClass.getUser() == null) {
             return Availability.unavailable("No one is logged");
         }
-        if(configurationClass.checkPermission(new Object(){}.getClass().getEnclosingMethod().getName(), permissions)){
+        if (configurationClass.checkPermission(new Object() {
+        }.getClass().getEnclosingMethod().getName(), permissions)) {
             return Availability.available();
         }
-        if(configurationClass.getActualProject()==null){
+        if (configurationClass.getActualProject() == null) {
             return Availability.unavailable("Choose project");
         }
         return Availability.unavailable("Access denied");
+    }
+
+    @ShellMethod("Update user role(userId, projectId, roleName, newRoleName)")
+    public String updateUserRole(@ShellOption(defaultValue = "-1") String userId, @ShellOption(defaultValue = "-1") String projectId, @ShellOption(defaultValue = "") String role, @ShellOption(defaultValue = "") String newRole) throws DBException {
+        Long id = Long.parseLong(userId);
+        Long thisProjectId = Long.parseLong(projectId);
+        try {
+            if (role != null && newRole != null) {
+                Assigment assigment = assigmentRepo.findByUserUserIdAndProjectProjectIdAndRole(id, thisProjectId, role);
+                Assigment assigment2 = assigmentRepo.findByUserUserIdAndProjectProjectIdAndRole(id, thisProjectId, newRole);
+                if (assigment2 != null) {
+                    return "This role of user in project already exist";
+                } else {
+                    Role newwRole = Role.valueOf(newRole);
+                    assigment.setRole(newwRole);
+                    assigment = assigmentRepo.save(assigment);
+                    return "Role updated.";
+                }
+            } else {
+                return "Wrong parameters of roles";
+            }
+
+        } catch (IllegalArgumentException e) {
+            log.error("Connection between this user and project not exist{}", e);
+            return "User with project not found";
+        }//need testes!!
     }
 
     @PostConstruct
