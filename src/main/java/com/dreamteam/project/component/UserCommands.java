@@ -101,6 +101,20 @@ public class UserCommands {
         }
     }
 
+    @ShellMethodAvailability
+    public Availability addUserToProjectAvailability(){
+        if(configurationClass.getUser()==null){
+            return Availability.unavailable("No one is logged");
+        }
+        if(configurationClass.checkPermission(new Object(){}.getClass().getEnclosingMethod().getName(), permissions)){
+            return Availability.available();
+        }
+        if(configurationClass.getActualProject()==null){
+            return Availability.unavailable("Choose project");
+        }
+        return Availability.unavailable("Access denied");
+    }
+
     @PostConstruct
     public void loadPermissions() {
         permissions = configurationClass.loadPermissions(this.getClass().getSimpleName());
