@@ -87,7 +87,7 @@ public class Document {
                 ", documentDescription='" + documentDescription + '\'' +
                 ", creatorId=" + creatorId +
                 ", topic='" + topic + '\'' +
-                ", project=" + project +
+                ", project=" + project.getProjectName() +
                 '}';
     }
 }
