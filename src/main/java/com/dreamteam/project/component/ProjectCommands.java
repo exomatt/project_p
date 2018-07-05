@@ -127,7 +127,7 @@ public class ProjectCommands {
     }
 
     @ShellMethodAvailability
-    public Availability listAllProjectAvailability(){
+    public Availability listAllProjectsAvailability(){
         if(configurationClass.getUser()==null){
             return Availability.unavailable("No one is logged");
         }
@@ -161,5 +161,8 @@ public class ProjectCommands {
     @PostConstruct
     public void loadPermissions() {
         permissions = configurationClass.loadPermissions(this.getClass().getSimpleName());
+        if(permissions.isEmpty()){
+            log.error("Project permissions are not ready to use");
+        }
     }
 }

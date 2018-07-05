@@ -2,5 +2,5 @@ createProject,Administrator
 updateProject,Administrator,Manager
 detailProject,Administrator,Manager
 deleteProject,Administrator,Manager
-listAllProject,Administrator
-listProject,Administrator,Manager,Engineer,HR
+listAllProjects,Administrator
+listProjects,Administrator,Manager,Engineer,HR

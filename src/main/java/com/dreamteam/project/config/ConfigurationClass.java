@@ -86,7 +86,6 @@ public class ConfigurationClass {
                 }
             }
         }
-        //TODO fix (in sytuation when assigment is not created)
         List<Assigment> assigmentList = assigmentRepo.findByUserUserId(user.getUserId());
         if(user!=null&&assigmentList!=null){
             for (Map.Entry<String, List<String>> entry : permissions.entrySet()) {

@@ -110,5 +110,8 @@ public class DocumentCommands {
     @PostConstruct
     public void loadPermissions() {
         permissions = configurationClass.loadPermissions(this.getClass().getSimpleName());
+        if(permissions.isEmpty()){
+            log.error("Document permissions are not ready to use");
+        }
     }
 }

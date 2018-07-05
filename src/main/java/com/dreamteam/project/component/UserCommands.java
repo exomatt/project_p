@@ -120,5 +120,8 @@ public class UserCommands {
     @PostConstruct
     public void loadPermissions() {
         permissions = configurationClass.loadPermissions(this.getClass().getSimpleName());
+        if(permissions.isEmpty()){
+            log.error("User permissions are not ready to use");
+        }
     }
 }
