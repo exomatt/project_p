@@ -38,7 +38,7 @@ public class DocumentCommands {
     @ShellMethod("Create document (documentName, description, topic)")
     public String createDocument(String documentName, String desc, String topic) {
         Long creatorId = configurationClass.getUser().getUserId();
-        Document document = new Document(null,documentName,desc,creatorId,topic);
+        Document document = new Document(null, documentName, desc, creatorId, topic);
         document = repo.save(document);
         return ("Document created succesfully: " + document);
     }
@@ -99,24 +99,6 @@ public class DocumentCommands {
 
     @PostConstruct
     public void loadPermissions() {
-        String csvFile = "DocumentPermission.csv";
-        String csvSplitBy = ",";
-        String line;
-        try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
-
-            while ((line = br.readLine()) != null) {
-
-                List<String> roles = new ArrayList<>();
-                String[] permission = line.split(csvSplitBy);
-
-                for (int i = 1; i < permission.length; i++) {
-                    roles.add(permission[i]);
-                }
-                permissions.put(permission[0], roles);
-            }
-            System.out.println(permissions);
-        } catch (IOException e) {
-            log.error("File not found", e);
-        }
+        permissions = configurationClass.loadPermissions(this.getClass().getSimpleName());
     }
 }
