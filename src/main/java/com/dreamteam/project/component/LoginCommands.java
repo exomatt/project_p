@@ -33,7 +33,7 @@ public class LoginCommands {
         this.projectRepo = projectRepo;
     }
 
-    @ShellMethod("User login")
+    @ShellMethod("User login (login, password)")
     public String login(String login, String password) {
         try {
             CryptoPassword cryptoPassword = new CryptoPassword();
@@ -60,7 +60,7 @@ public class LoginCommands {
         return "logout";
     }
 
-    @ShellMethod("Choose project for user")
+    @ShellMethod("Choose project for user (projectID)")
     public String chooseProject(Long projectId) {
         Project project = null;
         try {
