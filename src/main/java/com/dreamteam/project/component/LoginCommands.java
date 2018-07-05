@@ -25,7 +25,7 @@ public class LoginCommands {
     private final UserRepo userRepo;
     private final ProjectRepo projectRepo;
 
-    @ShellMethod("User login")
+    @ShellMethod("User login (login, password)")
     public String login(String login, String password) {
         try {
             CryptoPassword cryptoPassword = new CryptoPassword();
@@ -51,7 +51,7 @@ public class LoginCommands {
         return "logout";
     }
 
-    @ShellMethod("Choose project for user")
+    @ShellMethod("Choose project for user (projectID)")
     public String chooseProject(Long projectId) {
         try {
             Project project = projectRepo.findById(projectId).orElseThrow(() -> new DBException("A project with id " + projectId + " cannot be found"));

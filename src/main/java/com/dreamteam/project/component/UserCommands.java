@@ -35,7 +35,7 @@ public class UserCommands {
     private final AssigmentRepo assigmentRepo;
     private Map<String, List<String>> permissions = new HashMap<>();
 
-    @ShellMethod("Create new user")
+    @ShellMethod("Create new user (lastName, login, password)")
     public String createNewUser(String lastName, String login, String password) {
         //System.out.println(checkPermission(new Object(){}.getClass().getEnclosingMethod().getName()));
         User user = new User(null, lastName, login, password);
@@ -44,7 +44,7 @@ public class UserCommands {
         return "User created succesfully.";
     }
 
-    @ShellMethod("Add user to role")
+    @ShellMethod("Add user to role (userID, projectID, roleName)")
     public String addUserToRole(Long userID, Long projectId, String roleName) {
         try {
             Role role = Role.valueOf(roleName);
