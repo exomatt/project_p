@@ -1,2 +1,3 @@
 createNewUser,Administrator
 addUserToRole,Administrator,Manager
+showUsers,Administrator

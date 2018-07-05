@@ -11,10 +11,8 @@ import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.shell.standard.ShellCommandGroup;
-import org.springframework.shell.standard.ShellComponent;
-import org.springframework.shell.standard.ShellMethod;
-import org.springframework.shell.standard.ShellOption;
+import org.springframework.shell.Availability;
+import org.springframework.shell.standard.*;
 
 import javax.annotation.PostConstruct;
 import java.io.BufferedReader;
@@ -46,6 +44,17 @@ public class ProjectCommands {
         return project.toString();
     }
 
+    @ShellMethodAvailability
+    public Availability createProjectAvailability(){
+        if(configurationClass.getUser()==null){
+            return Availability.unavailable("No one is logged");
+        }
+        if(configurationClass.checkPermission(new Object(){}.getClass().getEnclosingMethod().getName(), permissions)){
+            return Availability.available();
+        }
+        return Availability.unavailable("Access denied");
+    }
+
     @ShellMethod("Update project (id, name, description, creator )")
     public String updateProject(@ShellOption(defaultValue = "-1") String id, @ShellOption(defaultValue = "") String name, @ShellOption(defaultValue = "") String description, String creator) throws DBException {
         try {
@@ -68,6 +77,17 @@ public class ProjectCommands {
         }
     }
 
+    @ShellMethodAvailability
+    public Availability updateProjectAvailability(){
+        if(configurationClass.getUser()==null){
+            return Availability.unavailable("No one is logged");
+        }
+        if(configurationClass.checkPermission(new Object(){}.getClass().getEnclosingMethod().getName(), permissions)){
+            return Availability.available();
+        }
+        return Availability.unavailable("Access denied");
+    }
+
     @ShellMethod("Show project details - which users are in which roles")
     public String detailProject() {
         Project project = configurationClass.getActualProject();
@@ -83,11 +103,33 @@ public class ProjectCommands {
         return "Successfully deleted project with ID " + id;
     }
 
+    @ShellMethodAvailability
+    public Availability deleteProjectAvailability(){
+        if(configurationClass.getUser()==null){
+            return Availability.unavailable("No one is logged");
+        }
+        if(configurationClass.checkPermission(new Object(){}.getClass().getEnclosingMethod().getName(), permissions)){
+            return Availability.available();
+        }
+        return Availability.unavailable("Access denied");
+    }
+
     @ShellMethod("Get list of projects")
     public String listAllProject() {
         return StreamSupport.stream(projectRepo.findAll().spliterator(), false)
                 .map(Project::toString)
                 .collect(Collectors.joining("\n"));
+    }
+
+    @ShellMethodAvailability
+    public Availability listAllProjectAvailability(){
+        if(configurationClass.getUser()==null){
+            return Availability.unavailable("No one is logged");
+        }
+        if(configurationClass.checkPermission(new Object(){}.getClass().getEnclosingMethod().getName(), permissions)){
+            return Availability.available();
+        }
+        return Availability.unavailable("Access denied");
     }
 
     @ShellMethod("Get list of projects of current user")

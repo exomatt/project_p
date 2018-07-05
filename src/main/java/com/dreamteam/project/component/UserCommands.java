@@ -18,10 +18,6 @@ import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellMethodAvailability;
 
 import javax.annotation.PostConstruct;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,11 +47,14 @@ public class UserCommands {
     }
 
     @ShellMethodAvailability
-    public Availability createNewUserAvailavility(){
+    public Availability createNewUserAvailability(){
+        if(configurationClass.getUser()==null){
+            return Availability.unavailable("No one is logged");
+        }
         if(configurationClass.checkPermission(new Object(){}.getClass().getEnclosingMethod().getName(), permissions)){
             return Availability.available();
         }
-        return Availability.unavailable("Acces denied");
+        return Availability.unavailable("Access denied");
     }
 
     @ShellMethod("Show users")//Access only for admin
@@ -65,12 +64,16 @@ public class UserCommands {
             System.out.println(user.toString());
         }
     }
+
     @ShellMethodAvailability
-    public Availability showUsersAvailavility(){
+    public Availability showUsersAvailability(){
+        if(configurationClass.getUser()==null){
+            return Availability.unavailable("No one is logged");
+        }
         if(configurationClass.checkPermission(new Object(){}.getClass().getEnclosingMethod().getName(), permissions)){
             return Availability.available();
         }
-        return Availability.unavailable("Acces denied");
+        return Availability.unavailable("Access denied");
     }
 
     @ShellMethod("Add user to role (userID, projectID, roleName)")
@@ -89,14 +92,6 @@ public class UserCommands {
             log.error("Cannot find role {}", roleName, e);
             return "Cannot find role";
         }
-    }
-
-    @ShellMethodAvailability
-    public Availability addUserToRoleAvailavility(){
-        if(configurationClass.checkPermission(new Object(){}.getClass().getEnclosingMethod().getName(), permissions)){
-            return Availability.available();
-        }
-        return Availability.unavailable("Acces denied");
     }
 
     @PostConstruct
