@@ -1,14 +1,18 @@
 package com.dreamteam.project.model;
+
+import com.sun.deploy.util.StringUtils;
 import lombok.Data;
+import org.hibernate.mapping.Fetchable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.*;
 
 
 @Entity
-@Table(name="PROJECT")
+@Table(name = "PROJECT")
 public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,20 +27,22 @@ public class Project {
     @OneToMany(mappedBy="project", fetch=FetchType.EAGER)
     private List<Document> documents = new ArrayList<>();
 
-    public Project(){
+    public Project() {
 
     }
-    public Project(Long id , String projectName,Long creatorId, String projectDescription){
-        this.projectName=projectName;
-        this.creatorId=creatorId;
-        this.projectDescription=projectDescription;
+
+    public Project(Long id, String projectName, Long creatorId, String projectDescription) {
+        this.projectName = projectName;
+        this.creatorId = creatorId;
+        this.projectDescription = projectDescription;
     }
-    public Project(Long id ,String projectName,Long creatorId, String projectDescription, List<Document> documents){
-        this.projectId=id;
-        this.projectName=projectName;
-        this.creatorId=creatorId;
-        this.projectDescription=projectDescription;
-        this.documents=documents;
+
+    public Project(Long id, String projectName, Long creatorId, String projectDescription, List<Document> documents) {
+        this.projectId = id;
+        this.projectName = projectName;
+        this.creatorId = creatorId;
+        this.projectDescription = projectDescription;
+        this.documents = documents;
     }
 
     public Long getProjectId() {
@@ -62,6 +68,7 @@ public class Project {
     public String getProjectDescription() {
         return projectDescription;
     }
+
     public void setProjectDescription(String projectDescription) {
         this.projectDescription = projectDescription;
     }
@@ -78,7 +85,8 @@ public class Project {
     public List<Document> getDocuments() {
         return documents;
     }
-    public void addToList(Document document){
+
+    public void addToList(Document document) {
         documents.add(document);
     }
 
@@ -89,7 +97,7 @@ public class Project {
                 ", projectName='" + projectName + '\'' +
                 ", creatorId=" + creatorId +
                 ", projectDescription='" + projectDescription + '\'' +
-                ", documents=" + documents +
+                ", documents=" + documents+
                 '}';
     }
 }

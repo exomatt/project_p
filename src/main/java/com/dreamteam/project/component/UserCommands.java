@@ -99,7 +99,54 @@ public class UserCommands {
             return "Cannot find role";
         }
     }
+    @ShellMethod("Delete user role in project")
+    public String deleteUserRole(String userLogin, String roleName) {
+        try {
+            Role role = Role.valueOf(roleName);
+            Project project = configurationClass.getActualProject();
+            if (project == null)
+                return "Project is not choosen";
+            User user = userRepo.findByLogin(userLogin);
+            if (user == null)
+                return "User with that login dont exist";
+            Long userID = user.getUserId();
+            Assigment assigment = assigmentRepo.findByUserUserIdAndProjectProjectIdAndRole(userID, project.getProjectId(), role);
+            if (assigment==null)
+                return "Cannot delete role " + roleName + " to user " + userID + " in project " + project.getProjectId();
+            assigmentRepo.delete(assigment);
+            return "User deleted from " + assigment.toString();
+        } catch (IllegalArgumentException e) {
+            log.error("Cannot find role {}", roleName, e);
+            return "Cannot find role";
+        }
+    }
+    @ShellMethod("Update user role(userId, projectId, roleName, newRoleName)")
+    public String updateUserRole(@ShellOption(defaultValue = "-1") String userId, @ShellOption(defaultValue = "-1") String projectId, @ShellOption(defaultValue = "") String role, @ShellOption(defaultValue = "") String newRole) throws DBException {
+        Long id = Long.parseLong(userId);
+        Long thisProjectId = Long.parseLong(projectId);
+        try {
+            if (!role.isEmpty() && newRole.isEmpty()) {
+                Role newwRole = Role.valueOf(newRole);
+                Role currentRole = Role.valueOf(role);
+                Assigment assigment = assigmentRepo.findByUserUserIdAndProjectProjectIdAndRole(id, thisProjectId, currentRole);
+                Assigment assigment2 = assigmentRepo.findByUserUserIdAndProjectProjectIdAndRole(id, thisProjectId, newwRole);
+                if (assigment2 != null) {
+                    return "This role of user in project already exist";
+                } else {
 
+                    assigment.setRole(newwRole);
+                    assigment = assigmentRepo.save(assigment);
+                    return assigment.toString();
+                }
+            } else {
+                return "Wrong parameters of roles";
+            }
+
+        } catch (IllegalArgumentException e) {
+            log.error("Connection between this user and project not exist{}", e);
+            return "User with project not found";
+        }
+    }
     @ShellMethodAvailability
     public Availability addUserToProjectAvailability() {
         if (configurationClass.getUser() == null) {

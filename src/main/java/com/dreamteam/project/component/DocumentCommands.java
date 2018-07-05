@@ -67,7 +67,7 @@ public class DocumentCommands {
     }
 
     @ShellMethodAvailability
-    public Availability updateDocumentAvailability(){
+    public Availability updateDocumentAvailability() {
         return Availability.available();
         //TODO napisac nowe checkPermission tylko dla tworcy dokumentu
     }
