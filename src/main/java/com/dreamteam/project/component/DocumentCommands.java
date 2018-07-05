@@ -14,10 +14,6 @@ import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
 
 import javax.annotation.PostConstruct;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -83,9 +79,16 @@ public class DocumentCommands {
         return "Successfully deleted document with ID " + id;
     }
 
-    @ShellMethod("Find documents by name")
-    public String findDocumentByName(String name) {
+    @ShellMethod("View document by name")
+    public String viewDocumentByName(String name) {
         return repo.findByDocumentName(name).stream()
+                .map(Document::toString)
+                .collect(Collectors.joining("\n"));
+    }
+
+    @ShellMethod("View document by id")
+    public String viewDocument(Long id) {
+        return repo.findByDocumentId(id).stream()
                 .map(Document::toString)
                 .collect(Collectors.joining("\n"));
     }
