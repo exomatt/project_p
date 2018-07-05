@@ -6,7 +6,7 @@ import javax.persistence.*;
 @Table(name = "ASSIGMENT")
 public class Assigment {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ASSIGMENT_ID", nullable = false)
     private Long assigmentId;
     @OneToOne

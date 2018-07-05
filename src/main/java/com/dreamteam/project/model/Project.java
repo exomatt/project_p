@@ -11,7 +11,7 @@ import javax.persistence.*;
 @Table(name="PROJECT")
 public class Project {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "PROJECT_ID", nullable = false)
     private Long projectId;
     @Column(name = "PROJECT_NAME", nullable = false)
