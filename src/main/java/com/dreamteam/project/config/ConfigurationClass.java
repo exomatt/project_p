@@ -53,6 +53,7 @@ public class ConfigurationClass {
 
     @PostConstruct
     public void createUser(){
+        user=null;
         String password;
         CryptoPassword cryptoPassword = new CryptoPassword();
         password = cryptoPassword.encrypt("admin");
@@ -60,8 +61,11 @@ public class ConfigurationClass {
             throw new RuntimeException();
         //TODO Something better than this exeption!! maybe own exeption? / just for demo
         if(userRepo.findByLoginAndPassword("admin",password)==null){
-            admin=new User("admin", "admin", password);
+            admin=new User("Administrator", "admin", password);
             userRepo.save(admin);
+        }
+        else{
+            admin=userRepo.findByLoginAndPassword("admin",password);
         }
     }
 

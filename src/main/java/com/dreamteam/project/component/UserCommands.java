@@ -20,10 +20,6 @@ import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellMethodAvailability;
 
 import javax.annotation.PostConstruct;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,12 +49,14 @@ public class UserCommands {
     }
 
     @ShellMethodAvailability
-    public Availability createNewUserAvailavility() {
-        if (configurationClass.checkPermission(new Object() {
-        }.getClass().getEnclosingMethod().getName(), permissions)) {
+    public Availability createNewUserAvailability(){
+        if(configurationClass.getUser()==null){
+            return Availability.unavailable("No one is logged");
+        }
+        if(configurationClass.checkPermission(new Object(){}.getClass().getEnclosingMethod().getName(), permissions)){
             return Availability.available();
         }
-        return Availability.unavailable("Acces denied");
+        return Availability.unavailable("Access denied");
     }
 
     @ShellMethod("Show users")//Access only for admin
@@ -70,12 +68,14 @@ public class UserCommands {
     }
 
     @ShellMethodAvailability
-    public Availability showUsersAvailavility() {
-        if (configurationClass.checkPermission(new Object() {
-        }.getClass().getEnclosingMethod().getName(), permissions)) {
+    public Availability showUsersAvailability(){
+        if(configurationClass.getUser()==null){
+            return Availability.unavailable("No one is logged");
+        }
+        if(configurationClass.checkPermission(new Object(){}.getClass().getEnclosingMethod().getName(), permissions)){
             return Availability.available();
         }
-        return Availability.unavailable("Acces denied");
+        return Availability.unavailable("Access denied");
     }
 
     @ShellMethod("Add user to role (userLogin, roleName)")
@@ -100,38 +100,6 @@ public class UserCommands {
             return "Cannot find role";
         }
     }
-
-    @ShellMethod("Delete user role in project")
-    public String deleteUserRole(String userLogin, String roleName) {
-        try {
-            Role role = Role.valueOf(roleName);
-            Project project = configurationClass.getActualProject();
-            if (project == null)
-                return "Project is not choosen";
-            User user = userRepo.findByLogin(userLogin);
-            if (user == null)
-                return "User with that login dont exist";
-            Long userID = user.getUserId();
-            Assigment assigment = assigmentRepo.findByUserUserIdAndProjectProjectIdAndRole(userID, project.getProjectId(), role);
-            if (assigment==null)
-                return "Cannot delete role " + roleName + " to user " + userID + " in project " + project.getProjectId();
-            assigmentRepo.delete(assigment);
-            return "User deleted from " + assigment.toString();
-        } catch (IllegalArgumentException e) {
-            log.error("Cannot find role {}", roleName, e);
-            return "Cannot find role";
-        }
-    }
-
-    @ShellMethodAvailability
-    public Availability addUserToRoleAvailavility() {
-        if (configurationClass.checkPermission(new Object() {
-        }.getClass().getEnclosingMethod().getName(), permissions)) {
-            return Availability.available();
-        }
-        return Availability.unavailable("Acces denied");
-    }
-
 
     @PostConstruct
     public void loadPermissions() {
