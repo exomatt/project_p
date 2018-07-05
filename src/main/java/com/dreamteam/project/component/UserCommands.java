@@ -11,9 +11,11 @@ import com.dreamteam.project.repository.UserRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
+import org.springframework.shell.standard.ShellMethodAvailability;
 
 import javax.annotation.PostConstruct;
 import java.io.BufferedReader;
@@ -42,11 +44,18 @@ public class UserCommands {
         password = cryptoPassword.encrypt(password);
         if (password.isEmpty())
             return "Problem with encryption";
-        //System.out.println(checkPermission(new Object(){}.getClass().getEnclosingMethod().getName()));
         User user = new User(null, lastName, login, password);
         user = userRepo.save(user);
         System.out.println(user.toString());
         return "User created succesfully.";
+    }
+
+    @ShellMethodAvailability
+    public Availability createNewUserAvailavility(){
+        if(configurationClass.checkPermission(new Object(){}.getClass().getEnclosingMethod().getName(), permissions)){
+            return Availability.available();
+        }
+        return Availability.unavailable("Acces denied");
     }
 
     @ShellMethod("Add user to role (userID, projectID, roleName)")
@@ -67,55 +76,16 @@ public class UserCommands {
         }
     }
 
-    public boolean checkPermission(String methodName) {
-        User loggedUser = configurationClass.getUser();
-        if ("admin".equals(loggedUser.getLogin())) {
-            return true;
+    @ShellMethodAvailability
+    public Availability addUserToRoleAvailavility(){
+        if(configurationClass.checkPermission(new Object(){}.getClass().getEnclosingMethod().getName(), permissions)){
+            return Availability.available();
         }
-        //TODO fix (in sytuation when assigment is not created)
-        List<Assigment> assigmentList = assigmentRepo.findByUserUserId(loggedUser.getUserId());
-        if (loggedUser != null && assigmentList != null) {
-            for (Map.Entry<String, List<String>> entry : permissions.entrySet()) {
-                String key = entry.getKey();
-                List<String> values = entry.getValue();
-
-                if (methodName.equals(key)) {
-                    for (Assigment assigment : assigmentList) {
-                        if (assigment.getProject() == configurationClass.getActualProject()) {
-                            for (String ok : values) {
-                                System.out.println(assigment.getRole().name());
-                                if (ok.equals(assigment.getRole().name())) {
-                                    return true;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return false;
+        return Availability.unavailable("Acces denied");
     }
 
     @PostConstruct
     public void loadPermissions() {
-        String csvFile = "UserPermission.csv";
-        String csvSplitBy = ",";
-        String line;
-        try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
-
-            while ((line = br.readLine()) != null) {
-
-                List<String> roles = new ArrayList<>();
-                String[] permission = line.split(csvSplitBy);
-
-                for (int i = 1; i < permission.length; i++) {
-                    roles.add(permission[i]);
-                }
-                permissions.put(permission[0], roles);
-            }
-            System.out.println(permissions);
-        } catch (IOException e) {
-            log.error("File not found", e);
-        }
+        permissions = configurationClass.loadPermissions(this.getClass().getSimpleName());
     }
 }

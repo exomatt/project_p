@@ -27,14 +27,15 @@ public class LoginCommands {
 
     @ShellMethod("User login (login, password)")
     public String login(String login, String password) {
+        if(configurationClass.getUser()!=null){
+            return "To login you should logout first";
+        }
         try {
             CryptoPassword cryptoPassword = new CryptoPassword();
             password = cryptoPassword.encrypt(password);
             if (password.isEmpty())
                 return "Problem with encryption";
-            System.out.println(login + "  " + password);
             User loggedUser = userRepo.findByLoginAndPassword(login, password);
-            System.out.println("Found user:"+ loggedUser.toString());
             if (loggedUser == null) {
                 throw new DBException("A user with login " + login + " cannot be found");
             }
