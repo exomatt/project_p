@@ -115,33 +115,7 @@ public class UserCommands {
         return Availability.unavailable("Access denied");
     }
 
-    @ShellMethod("Update user role(userId, projectId, roleName, newRoleName)")
-    public String updateUserRole(@ShellOption(defaultValue = "-1") String userId, @ShellOption(defaultValue = "-1") String projectId, @ShellOption(defaultValue = "") String role, @ShellOption(defaultValue = "") String newRole) throws DBException {
-        Long id = Long.parseLong(userId);
-        Long thisProjectId = Long.parseLong(projectId);
-        try {
-            if (role != null && newRole != null) {
-                Role newwRole = Role.valueOf(newRole);
-                Role currentRole = Role.valueOf(role);
-                Assigment assigment = assigmentRepo.findByUserUserIdAndProjectProjectIdAndRole(id, thisProjectId, currentRole);
-                Assigment assigment2 = assigmentRepo.findByUserUserIdAndProjectProjectIdAndRole(id, thisProjectId, newwRole);
-                if (assigment2 != null) {
-                    return "This role of user in project already exist";
-                } else {
 
-                    assigment.setRole(newwRole);
-                    assigment = assigmentRepo.save(assigment);
-                    return "Role updated.";
-                }
-            } else {
-                return "Wrong parameters of roles";
-            }
-
-        } catch (IllegalArgumentException e) {
-            log.error("Connection between this user and project not exist{}", e);
-            return "User with project not found";
-        }//need testes!!
-    }
 
     @PostConstruct
     public void loadPermissions() {
