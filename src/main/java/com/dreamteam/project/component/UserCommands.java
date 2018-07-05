@@ -60,7 +60,7 @@ public class UserCommands {
                     return "User with id " + userID + " is now a " + roleName + " in project id " + projectId;
                 }
             }
-            return "Cannot set role " + roleName + " to user "+userID+" in project " + projectId;
+            return "Cannot set role " + roleName + " to user " + userID + " in project " + projectId;
         } catch (IllegalArgumentException e) {
             log.error("Cannot find role {}", roleName, e);
             return "Cannot find role";
@@ -69,22 +69,22 @@ public class UserCommands {
 
     public boolean checkPermission(String methodName) {
         User loggedUser = configurationClass.getUser();
-        if("admin".equals(loggedUser.getLogin())){
+        if ("admin".equals(loggedUser.getLogin())) {
             return true;
         }
         //TODO fix (in sytuation when assigment is not created)
         List<Assigment> assigmentList = assigmentRepo.findByUserUserId(loggedUser.getUserId());
-        if(loggedUser!=null&&assigmentList!=null){
+        if (loggedUser != null && assigmentList != null) {
             for (Map.Entry<String, List<String>> entry : permissions.entrySet()) {
                 String key = entry.getKey();
                 List<String> values = entry.getValue();
 
-                if(methodName.equals(key)){
+                if (methodName.equals(key)) {
                     for (Assigment assigment : assigmentList) {
-                        if(assigment.getProject()==configurationClass.getActualProject()){
+                        if (assigment.getProject() == configurationClass.getActualProject()) {
                             for (String ok : values) {
                                 System.out.println(assigment.getRole().name());
-                                if(ok.equals(assigment.getRole().name())){
+                                if (ok.equals(assigment.getRole().name())) {
                                     return true;
                                 }
                             }

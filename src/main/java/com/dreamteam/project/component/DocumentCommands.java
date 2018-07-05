@@ -35,9 +35,10 @@ public class DocumentCommands {
     private final ConfigurationClass configurationClass;
     private Map<String, List<String>> permissions = new HashMap<>();
 
-    @ShellMethod("Create document (documentName, description, creatorID, topic)")
-    public String createDocument(String documentName, String desc, Long creatorId, String topic) {
-        Document document = new Document(null, documentName, desc, creatorId, topic);
+    @ShellMethod("Create document (documentName, description, topic)")
+    public String createDocument(String documentName, String desc, String topic) {
+        Long creatorId = configurationClass.getUser().getUserId();
+        Document document = new Document(null,documentName,desc,creatorId,topic);
         document = repo.save(document);
         return ("Document created succesfully: " + document);
     }

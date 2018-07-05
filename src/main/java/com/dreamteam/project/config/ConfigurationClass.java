@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 
 import javax.annotation.PostConstruct;
+import javax.validation.constraints.Null;
 
 @Configuration
 public class ConfigurationClass {
@@ -46,7 +47,9 @@ public class ConfigurationClass {
         //TODO Something better than this exeption!! maybe own exeption? / just for demo
         if (password.isEmpty())
             throw new RuntimeException();
-        admin=new User("admin", "admin", password);
-        userRepo.save(admin);
+        if(userRepo.findByLoginAndPassword("admin",password)==null){
+            admin=new User("admin", "admin", password);
+            userRepo.save(admin);
+        }
     }
 }
