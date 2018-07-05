@@ -7,6 +7,7 @@ import com.dreamteam.project.model.User;
 import com.dreamteam.project.exeption.DBException;
 import com.dreamteam.project.repository.ProjectRepo;
 import com.dreamteam.project.repository.UserRepo;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.standard.ShellCommandGroup;
@@ -15,23 +16,14 @@ import org.springframework.shell.standard.ShellMethod;
 
 
 @Slf4j
+@RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @ShellComponent
 @ShellCommandGroup("Login commands")
 public class LoginCommands {
 
-    private ConfigurationClass configurationClass;
-    private UserRepo userRepo;
-    private ProjectRepo projectRepo;
-
-    public LoginCommands() {
-    }
-
-    @Autowired
-    public LoginCommands(ConfigurationClass configurationClass, UserRepo userRepo, ProjectRepo projectRepo) {
-        this.configurationClass = configurationClass;
-        this.userRepo = userRepo;
-        this.projectRepo = projectRepo;
-    }
+    private final ConfigurationClass configurationClass;
+    private final UserRepo userRepo;
+    private final ProjectRepo projectRepo;
 
     @ShellMethod("User login")
     public String login(String login, String password) {
@@ -41,7 +33,6 @@ public class LoginCommands {
             if (password.isEmpty())
                 return "Problem with encryption";
             System.out.println(login + "  " + password);
-            //TODO check encryption
             User loggedUser = userRepo.findByLoginAndPassword(login, password);
             if (loggedUser == null) {
                 throw new DBException("A user with login " + login + " cannot be found");
@@ -62,15 +53,14 @@ public class LoginCommands {
 
     @ShellMethod("Choose project for user")
     public String chooseProject(Long projectId) {
-        Project project = null;
         try {
-            project = projectRepo.findById(projectId).orElseThrow(() -> new DBException("A project with id " + projectId + " cannot be found"));
+            Project project = projectRepo.findById(projectId).orElseThrow(() -> new DBException("A project with id " + projectId + " cannot be found"));
+            configurationClass.setActualProject(project);
+            return "Project: " + project.getProjectName();
         } catch (DBException e) {
             log.error("Cannot find project", projectId, e);
             return "Cannot find project with id " + projectId;
         }
-        configurationClass.setActualProject(project);
-        return "Project: " + project.getProjectName();
     }
 
 }

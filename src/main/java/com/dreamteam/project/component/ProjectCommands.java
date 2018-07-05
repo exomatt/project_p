@@ -29,7 +29,6 @@ import java.util.stream.StreamSupport;
 
 
 @Slf4j
-//@AllArgsConstructor(onConstructor = @__(@Autowired))
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @ShellComponent
 @ShellCommandGroup("Project commands")
@@ -99,7 +98,7 @@ public class ProjectCommands {
     }
 
     @PostConstruct
-    public void loadPermission() {
+    public void loadPermissions() {
         String csvFile = "ProjectPermission.csv";
         String csvSplitBy = ",";
         String line;
