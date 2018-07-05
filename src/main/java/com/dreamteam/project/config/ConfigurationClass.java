@@ -56,9 +56,9 @@ public class ConfigurationClass {
         String password;
         CryptoPassword cryptoPassword = new CryptoPassword();
         password = cryptoPassword.encrypt("admin");
-        //TODO Something better than this exeption!! maybe own exeption? / just for demo
         if (password.isEmpty())
             throw new RuntimeException();
+        //TODO Something better than this exeption!! maybe own exeption? / just for demo
         if(userRepo.findByLoginAndPassword("admin",password)==null){
             admin=new User("admin", "admin", password);
             userRepo.save(admin);

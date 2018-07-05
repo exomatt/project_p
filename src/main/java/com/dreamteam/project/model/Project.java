@@ -81,11 +81,15 @@ public class Project {
     public void addToList(Document document){
         documents.add(document);
     }
+
     @Override
     public String toString() {
         return "Project{" +
-                "name='" + projectName + '\'' +", description='" + projectDescription+ '\'' +", creator id='" + creatorId + '\'' +
-                ", documentlist='" + documents.toString() + '\'' +
-                '}';//need to check if correct
+                "projectId=" + projectId +
+                ", projectName='" + projectName + '\'' +
+                ", creatorId=" + creatorId +
+                ", projectDescription='" + projectDescription + '\'' +
+                ", documents=" + documents +
+                '}';
     }
 }
