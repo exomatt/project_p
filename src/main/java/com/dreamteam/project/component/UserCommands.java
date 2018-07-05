@@ -46,11 +46,12 @@ public class UserCommands {
     }
 
     @ShellMethodAvailability
-    public Availability createNewUserAvailability(){
-        if(configurationClass.getUser()==null){
+    public Availability createNewUserAvailability() {
+        if (configurationClass.getUser() == null) {
             return Availability.unavailable("No one is logged");
         }
-        if(configurationClass.checkPermission(new Object(){}.getClass().getEnclosingMethod().getName(), permissions)){
+        if (configurationClass.checkPermission(new Object() {
+        }.getClass().getEnclosingMethod().getName(), permissions)) {
             return Availability.available();
         }
         return Availability.unavailable("Access denied");
@@ -65,11 +66,12 @@ public class UserCommands {
     }
 
     @ShellMethodAvailability
-    public Availability showUsersAvailability(){
-        if(configurationClass.getUser()==null){
+    public Availability showUsersAvailability() {
+        if (configurationClass.getUser() == null) {
             return Availability.unavailable("No one is logged");
         }
-        if(configurationClass.checkPermission(new Object(){}.getClass().getEnclosingMethod().getName(), permissions)){
+        if (configurationClass.checkPermission(new Object() {
+        }.getClass().getEnclosingMethod().getName(), permissions)) {
             return Availability.available();
         }
         return Availability.unavailable("Access denied");
@@ -89,7 +91,7 @@ public class UserCommands {
             Assigment assigments = assigmentRepo.findByUserUserIdAndProjectProjectIdAndRole(userID, project.getProjectId(), role);
             if (assigments != null)
                 return "Cannot set role " + roleName + " to user " + userID + " in project " + project.getProjectId();
-            Assigment assigment = new Assigment(null, user, role, project);
+            Assigment assigment = new Assigment(user, role, project);
             assigmentRepo.save(assigment);
             return "User add to  " + assigment.toString();
         } catch (IllegalArgumentException e) {
@@ -145,6 +147,23 @@ public class UserCommands {
             return "User with project not found";
         }
     }
+    @ShellMethodAvailability
+    public Availability addUserToProjectAvailability() {
+        if (configurationClass.getUser() == null) {
+            return Availability.unavailable("No one is logged");
+        }
+        if (configurationClass.checkPermission(new Object() {
+        }.getClass().getEnclosingMethod().getName(), permissions)) {
+            return Availability.available();
+        }
+        if (configurationClass.getActualProject() == null) {
+            return Availability.unavailable("Choose project");
+        }
+        return Availability.unavailable("Access denied");
+    }
+
+
+
     @PostConstruct
     public void loadPermissions() {
         permissions = configurationClass.loadPermissions(this.getClass().getSimpleName());

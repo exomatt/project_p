@@ -44,7 +44,7 @@ public class ProjectCommands {
         Project project = new Project(null, name, creatorId, description);
         project = projectRepo.save(project);
         Role role = Role.valueOf("Creator");
-        assigmentRepo.save(new Assigment(creatorId, configurationClass.getUser(), role, project));
+        assigmentRepo.save(new Assigment(configurationClass.getUser(), role, project));
         return project.toString();
     }
 
@@ -95,6 +95,7 @@ public class ProjectCommands {
     @ShellMethod("Show project details - which users are in which roles")
     public String detailProject() {
         Project project = configurationClass.getActualProject();
+        System.out.println(project);
         return assigmentRepo.findByProjectProjectId(project.getProjectId()).stream()
                 .map(Assigment::toString)
                 .collect(Collectors.joining("\n"));
@@ -119,7 +120,7 @@ public class ProjectCommands {
     }
 
     @ShellMethod("Get list of projects")
-    public String listAllProject() {
+    public String listAllProjects() {
         return StreamSupport.stream(projectRepo.findAll().spliterator(), false)
                 .map(Project::toString)
                 .collect(Collectors.joining("\n"));
@@ -137,7 +138,7 @@ public class ProjectCommands {
     }
 
     @ShellMethod("Get list of projects of current user")
-    public String listProject() {
+    public String listProjects() {
         Long id = configurationClass.getUser().getUserId();
         try {
             List<Assigment> assigments = assigmentRepo.findByUserUserId(id);

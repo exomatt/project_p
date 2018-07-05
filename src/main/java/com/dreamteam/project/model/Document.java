@@ -6,7 +6,7 @@ import javax.persistence.*;
 @Table(name="DOCUMENT")
 public class Document {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "DOCUMENT_ID", nullable = false)
     private Long documentId;
     @Column(name = "DOCUMENT_NAME", nullable = false)
@@ -87,7 +87,7 @@ public class Document {
                 ", documentDescription='" + documentDescription + '\'' +
                 ", creatorId=" + creatorId +
                 ", topic='" + topic + '\'' +
-                ", project=" + project.getProjectName() +
+                ", projectName=" + project.getProjectName() +
                 '}';
     }
 }

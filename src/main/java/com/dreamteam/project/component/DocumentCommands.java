@@ -100,7 +100,7 @@ public class DocumentCommands {
     }
 
     @ShellMethod("List documents of current user")
-    public String listUserDocuments() {
+    public String listDocuments() {
         Long userId = configurationClass.getUser().getUserId();
         return repo.findByCreatorId(userId).stream()
                 .map(Document::toString)

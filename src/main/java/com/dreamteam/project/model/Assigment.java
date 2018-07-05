@@ -6,7 +6,7 @@ import javax.persistence.*;
 @Table(name = "ASSIGMENT")
 public class Assigment {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ASSIGMENT_ID", nullable = false)
     private Long assigmentId;
     @OneToOne
@@ -19,15 +19,10 @@ public class Assigment {
     private Project project;
 
     public Assigment (){}
-    public Assigment(Long assigmentId, User user, Role role, Project project) {
-        this.assigmentId = assigmentId;
+    public Assigment(User user, Role role, Project project) {
         this.user = user;
         this.role = role;
         this.project = project;
-    }
-
-    public Long getAssigmentId() {
-        return assigmentId;
     }
 
     public User getUser() {
@@ -40,10 +35,6 @@ public class Assigment {
 
     public Project getProject() {
         return project;
-    }
-
-    public void setAssigmentId(Long assigmentId) {
-        this.assigmentId = assigmentId;
     }
 
     public void setUser(User user) {

@@ -15,7 +15,7 @@ import javax.persistence.*;
 @Table(name = "PROJECT")
 public class Project {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "PROJECT_ID", nullable = false)
     private Long projectId;
     @Column(name = "PROJECT_NAME", nullable = false)
@@ -24,7 +24,7 @@ public class Project {
     private Long creatorId;
     @Column(name = "PROJECT_DESC", nullable = false)
     private String projectDescription;
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "project")
+    @OneToMany(mappedBy="project", fetch=FetchType.EAGER)
     private List<Document> documents = new ArrayList<>();
 
     public Project() {
