@@ -91,7 +91,7 @@ public class UserCommands {
             Assigment assigments = assigmentRepo.findByUserUserIdAndProjectProjectIdAndRole(userID, project.getProjectId(), role);
             if (assigments != null)
                 return "Cannot set role " + roleName + " to user " + userID + " in project " + project.getProjectId();
-            Assigment assigment = new Assigment(null, user, role, project);
+            Assigment assigment = new Assigment(user, role, project);
             assigmentRepo.save(assigment);
             return "User add to  " + assigment.toString();
         } catch (IllegalArgumentException e) {

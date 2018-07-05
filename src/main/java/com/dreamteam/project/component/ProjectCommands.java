@@ -44,7 +44,7 @@ public class ProjectCommands {
         Project project = new Project(null, name, creatorId, description);
         project = projectRepo.save(project);
         Role role = Role.valueOf("Creator");
-        assigmentRepo.save(new Assigment(creatorId, configurationClass.getUser(), role, project));
+        assigmentRepo.save(new Assigment(configurationClass.getUser(), role, project));
         return project.toString();
     }
 
