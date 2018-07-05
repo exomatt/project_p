@@ -44,7 +44,6 @@ public class UserCommands {
         password = cryptoPassword.encrypt(password);
         if (password.isEmpty())
             return "Problem with encryption";
-        System.out.println(configurationClass.checkPermission(new Object(){}.getClass().getEnclosingMethod().getName(), permissions));
         User user = new User(null, lastName, login, password);
         user = userRepo.save(user);
         System.out.println(user.toString());
@@ -53,6 +52,21 @@ public class UserCommands {
 
     @ShellMethodAvailability
     public Availability createNewUserAvailavility(){
+        if(configurationClass.checkPermission(new Object(){}.getClass().getEnclosingMethod().getName(), permissions)){
+            return Availability.available();
+        }
+        return Availability.unavailable("Acces denied");
+    }
+
+    @ShellMethod("Show users")//Access only for admin
+    public void showUsers(){
+        List<User> userList = userRepo.findAll();
+        for (User user: userList) {
+            System.out.println(user.toString());
+        }
+    }
+    @ShellMethodAvailability
+    public Availability showUsersAvailavility(){
         if(configurationClass.checkPermission(new Object(){}.getClass().getEnclosingMethod().getName(), permissions)){
             return Availability.available();
         }

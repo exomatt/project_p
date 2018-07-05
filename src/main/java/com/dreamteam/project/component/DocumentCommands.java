@@ -8,10 +8,8 @@ import com.dreamteam.project.repository.UserRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.shell.standard.ShellCommandGroup;
-import org.springframework.shell.standard.ShellComponent;
-import org.springframework.shell.standard.ShellMethod;
-import org.springframework.shell.standard.ShellOption;
+import org.springframework.shell.Availability;
+import org.springframework.shell.standard.*;
 
 import javax.annotation.PostConstruct;
 import java.io.BufferedReader;
@@ -67,6 +65,12 @@ public class DocumentCommands {
             log.error("Cannot find document with id {}", id, exception);
             return "The document with id " + id + " cannot be found";
         }
+    }
+
+    @ShellMethodAvailability
+    public Availability updateDocumentAvailability(){
+        return Availability.available();
+        //TODO napisac nowe checkPermission tylko dla tworcy dokumentu
     }
 
     @ShellMethod("List all documents")
