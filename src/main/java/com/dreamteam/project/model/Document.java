@@ -22,13 +22,6 @@ public class Document {
     private Project project;
 
     public Document(){}
-    public Document(Long id,String documentName, String documentDescription, Long creatorId,String topic){
-        this.documentId=id;
-        this.creatorId=creatorId;
-        this.documentDescription=documentDescription;
-        this.documentName=documentName;
-        this.topic=topic;
-    }
     public Document(Long id,String documentName, String documentDescription, Long creatorId,String topic,Project project){
         this.documentId=id;
         this.creatorId=creatorId;

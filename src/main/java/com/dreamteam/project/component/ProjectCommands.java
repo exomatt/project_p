@@ -4,6 +4,7 @@ import com.dreamteam.project.config.ConfigurationClass;
 import com.dreamteam.project.exeption.DBException;
 import com.dreamteam.project.model.Assigment;
 import com.dreamteam.project.model.Project;
+import com.dreamteam.project.model.Role;
 import com.dreamteam.project.repository.AssigmentRepo;
 import com.dreamteam.project.repository.ProjectRepo;
 import com.dreamteam.project.repository.UserRepo;
@@ -37,10 +38,13 @@ public class ProjectCommands {
     private final UserRepo userRepo;
     private Map<String, List<String>> permissions = new HashMap<>();
 
-    @ShellMethod("Create new project (name, description, creator )")
-    public String createProject(String name, String description, long creator) {
-        Project project = new Project(null, name, creator, description);
+    @ShellMethod("Create new project (name, description)")
+    public String createProject(String name, String description) {
+        Long creatorId = configurationClass.getUser().getUserId();
+        Project project = new Project(null, name, creatorId, description);
         project = projectRepo.save(project);
+        Role role = Role.valueOf("Creator");
+        assigmentRepo.save(new Assigment(creatorId, configurationClass.getUser(), role, project));
         return project.toString();
     }
 

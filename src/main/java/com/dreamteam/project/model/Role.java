@@ -4,5 +4,6 @@ public enum Role {
     Manager,
     Engineer,
     HR,
-    Administrator
+    Administrator,
+    Creator
 }
