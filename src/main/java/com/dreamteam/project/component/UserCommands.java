@@ -121,12 +121,14 @@ public class UserCommands {
         Long thisProjectId = Long.parseLong(projectId);
         try {
             if (role != null && newRole != null) {
-                Assigment assigment = assigmentRepo.findByUserUserIdAndProjectProjectIdAndRole(id, thisProjectId, role);
-                Assigment assigment2 = assigmentRepo.findByUserUserIdAndProjectProjectIdAndRole(id, thisProjectId, newRole);
+                Role newwRole = Role.valueOf(newRole);
+                Role currentRole = Role.valueOf(role);
+                Assigment assigment = assigmentRepo.findByUserUserIdAndProjectProjectIdAndRole(id, thisProjectId, currentRole);
+                Assigment assigment2 = assigmentRepo.findByUserUserIdAndProjectProjectIdAndRole(id, thisProjectId, newwRole);
                 if (assigment2 != null) {
                     return "This role of user in project already exist";
                 } else {
-                    Role newwRole = Role.valueOf(newRole);
+
                     assigment.setRole(newwRole);
                     assigment = assigmentRepo.save(assigment);
                     return "Role updated.";
