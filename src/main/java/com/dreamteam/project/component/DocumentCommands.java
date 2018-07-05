@@ -14,10 +14,6 @@ import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
 
 import javax.annotation.PostConstruct;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,14 +51,15 @@ public class DocumentCommands {
     }
 
     @ShellMethod("Update document")
-    public String updateDocument(Long id, @ShellOption(defaultValue = "") String documentName, @ShellOption(defaultValue = "") String desc, @ShellOption(defaultValue = "") String topic) throws DBException {
+    public String updateDocument(@ShellOption(defaultValue = "-1") String docId, @ShellOption(defaultValue = "") String documentName, @ShellOption(defaultValue = "") String desc, @ShellOption(defaultValue = "") String topic) throws DBException {
+        Long id = Long.parseLong(docId);
         try {
             Document document = repo.findById(id).orElseThrow(() -> new DBException("A document with id " + id + " cannot be found"));
             if (!documentName.isEmpty()) document.setDocumentName(documentName);
             if (!desc.isEmpty()) document.setDocumentDescription(desc);
             if (!topic.isEmpty()) document.setTopic(topic);
             document = repo.save(document);
-            return "Successfully updated the document -> " + document;
+            return "Successfully updated the document -> " + document.toString();
         } catch (DBException exception) {
             log.error("Cannot find document with id {}", id, exception);
             return "The document with id " + id + " cannot be found";
@@ -82,9 +79,16 @@ public class DocumentCommands {
         return "Successfully deleted document with ID " + id;
     }
 
-    @ShellMethod("Find documents by name")
-    public String findDocumentByName(String name) {
+    @ShellMethod("View document by name")
+    public String viewDocumentByName(String name) {
         return repo.findByDocumentName(name).stream()
+                .map(Document::toString)
+                .collect(Collectors.joining("\n"));
+    }
+
+    @ShellMethod("View document by id")
+    public String viewDocument(Long id) {
+        return repo.findByDocumentId(id).stream()
                 .map(Document::toString)
                 .collect(Collectors.joining("\n"));
     }
