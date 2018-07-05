@@ -120,7 +120,7 @@ public class ProjectCommands {
     }
 
     @ShellMethod("Get list of projects")
-    public String listAllProject() {
+    public String listAllProjects() {
         return StreamSupport.stream(projectRepo.findAll().spliterator(), false)
                 .map(Project::toString)
                 .collect(Collectors.joining("\n"));
@@ -138,7 +138,7 @@ public class ProjectCommands {
     }
 
     @ShellMethod("Get list of projects of current user")
-    public String listProject() {
+    public String listProjects() {
         Long id = configurationClass.getUser().getUserId();
         try {
             List<Assigment> assigments = assigmentRepo.findByUserUserId(id);
