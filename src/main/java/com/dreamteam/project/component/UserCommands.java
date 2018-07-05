@@ -58,6 +58,21 @@ public class UserCommands {
         return Availability.unavailable("Acces denied");
     }
 
+    @ShellMethod("Show users")//Access only for admin
+    public void showUsers(){
+        List<User> userList = userRepo.findAll();
+        for (User user: userList) {
+            System.out.println(user.toString());
+        }
+    }
+    @ShellMethodAvailability
+    public Availability showUsersAvailavility(){
+        if(configurationClass.checkPermission(new Object(){}.getClass().getEnclosingMethod().getName(), permissions)){
+            return Availability.available();
+        }
+        return Availability.unavailable("Acces denied");
+    }
+
     @ShellMethod("Add user to role (userID, projectID, roleName)")
     public String addUserToRole(Long userID, Long projectId, String roleName) {
         try {

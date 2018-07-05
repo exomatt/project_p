@@ -69,21 +69,32 @@ public class ConfigurationClass {
         methodName = methodName.replace("Availability","");
         System.out.println(methodName);
         if(user.getLogin().equals(admin.getLogin())){
-            return true;
+            for (Map.Entry<String, List<String>> entry : permissions.entrySet()) {
+                String key = entry.getKey();
+                List<String> roles = entry.getValue();
+
+                if(methodName.equals(key)){
+                    for (String role : roles) {
+                        if(role.equals(user.getLastName())){
+                            return true;
+                        }
+                    }
+                }
+            }
         }
         //TODO fix (in sytuation when assigment is not created)
         List<Assigment> assigmentList = assigmentRepo.findByUserUserId(user.getUserId());
         if(user!=null&&assigmentList!=null){
             for (Map.Entry<String, List<String>> entry : permissions.entrySet()) {
                 String key = entry.getKey();
-                List<String> values = entry.getValue();
+                List<String> roles = entry.getValue();
 
                 if(methodName.equals(key)){
                     for (Assigment assigment : assigmentList) {
                         if(assigment.getProject()==actualProject){
-                            for (String ok : values) {
+                            for (String role : roles) {
                                 System.out.println(assigment.getRole().name());
-                                if(ok.equals(assigment.getRole().name())){
+                                if(role.equals(assigment.getRole().name())){
                                     return true;
                                 }
                             }
