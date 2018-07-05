@@ -97,7 +97,7 @@ public class DocumentCommands {
     }
 
     @PostConstruct
-    public void loadPermission() {
+    public void loadPermissions() {
         String csvFile = "DocumentPermission.csv";
         String csvSplitBy = ",";
         String line;
