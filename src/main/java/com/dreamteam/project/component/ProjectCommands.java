@@ -4,6 +4,7 @@ import com.dreamteam.project.config.ConfigReader;
 import com.dreamteam.project.config.ConfigurationClass;
 import com.dreamteam.project.exeption.DBException;
 import com.dreamteam.project.model.Assigment;
+import com.dreamteam.project.model.Document;
 import com.dreamteam.project.model.Project;
 import com.dreamteam.project.model.Role;
 import com.dreamteam.project.repository.AssigmentRepo;
@@ -54,9 +55,6 @@ public class ProjectCommands {
         if(configurationClass.getUser()==null){
             return Availability.unavailable("No one is logged");
         }
-        if(!configurationClass.getUser().getLastName().equals("Administrator")){
-            return Availability.unavailable("You are not a admin");
-        }
         if(configurationClass.checkPermission(new Object(){}.getClass().getEnclosingMethod().getName(), permissions)){
             return Availability.available();
         }
@@ -90,7 +88,7 @@ public class ProjectCommands {
             return Availability.unavailable("No one is logged");
         }
         if (configurationClass.getActualProject() == null) {
-            return Availability.unavailable("Choose project");
+            return Availability.unavailable("Project was not chosen");
         }
         if(configurationClass.checkPermission(new Object(){}.getClass().getEnclosingMethod().getName(), permissions)){
             return Availability.available();
@@ -113,7 +111,7 @@ public class ProjectCommands {
             return Availability.unavailable("No one is logged");
         }
         if (configurationClass.getActualProject() == null) {
-            return Availability.unavailable("Choose project");
+            return Availability.unavailable("Project was not chosen");
         }
         if(configurationClass.checkPermission(new Object(){}.getClass().getEnclosingMethod().getName(), permissions)){
             return Availability.available();
@@ -122,11 +120,32 @@ public class ProjectCommands {
     }
 
 
-    @ShellMethod("Delete project by ID")
-    public String deleteProject(Long id) {
-        projectRepo.deleteById(id);
-        configurationClass.setActualProject(null);
-        return "Successfully deleted project with ID " + id+" and logout of it";
+    @ShellMethod("Delete project by ID (if you wanna migrate documents please enter project id as second value)")
+    public String deleteProject(Long deletedProjectId, @ShellOption(defaultValue = "-1") Long migrateProjectId) {
+
+        if(migrateProjectId==-1){
+            projectRepo.deleteById(deletedProjectId);
+            configurationClass.setActualProject(null);
+            return "Successfully deleted project with ID " + deletedProjectId +" and logout of it";
+        }
+        try {
+            Project projectDeleted = projectRepo.findById(deletedProjectId).orElseThrow(() -> new DBException("A project with id " + deletedProjectId + " cannot be found"));
+            Project projectMigration = projectRepo.findById(migrateProjectId).orElseThrow(() -> new DBException("A project with id " + migrateProjectId + " cannot be found"));
+            List<Document> documentListToMigration = projectDeleted.getDocuments();
+            if(documentListToMigration.isEmpty()){
+               throw new DBException("In project "+deletedProjectId+" there aren't documents");
+            }
+            List<Document> documentList = projectMigration.getDocuments();
+            documentList.addAll(documentListToMigration);
+            projectMigration.setDocuments(documentList);
+
+            projectRepo.deleteById(deletedProjectId);
+            configurationClass.setActualProject(null);
+            return "Successfully deleted project with ID " + deletedProjectId +", migrate document to " + migrateProjectId + " and logout of it";
+        } catch (DBException e) {
+            log.error("Migration documents is not working", e);
+            return e.getMessage();
+        }
     }
 
     @ShellMethodAvailability
@@ -135,7 +154,7 @@ public class ProjectCommands {
             return Availability.unavailable("No one is logged");
         }
         if (configurationClass.getActualProject() == null) {
-            return Availability.unavailable("Choose project");
+            return Availability.unavailable("Project was not chosen");
         }
         if(configurationClass.checkPermission(new Object(){}.getClass().getEnclosingMethod().getName(), permissions)){
             return Availability.available();

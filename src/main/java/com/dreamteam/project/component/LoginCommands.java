@@ -84,4 +84,11 @@ public class LoginCommands {
         }
     }
 
+    @ShellMethodAvailability
+    public Availability chooseProjectAvailability(){
+        if(configurationClass.getUser()==null){
+            return Availability.unavailable("No one is logged");
+        }
+        return Availability.available();
+    }
 }

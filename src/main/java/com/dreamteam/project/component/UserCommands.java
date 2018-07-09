@@ -103,7 +103,7 @@ public class UserCommands {
             return Availability.unavailable("No one is logged");
         }
         if (configurationClass.getActualProject() == null) {
-            return Availability.unavailable("Choose project");
+            return Availability.unavailable("Project was not chosen");
         }
         if (configurationClass.checkPermission(new Object() {
         }.getClass().getEnclosingMethod().getName(), permissions)) {
@@ -136,7 +136,7 @@ public class UserCommands {
             return Availability.unavailable("No one is logged");
         }
         if (configurationClass.getActualProject() == null) {
-            return Availability.unavailable("Choose project");
+            return Availability.unavailable("Project was not chosen");
         }
         if (configurationClass.checkPermission(new Object() {
         }.getClass().getEnclosingMethod().getName(), permissions)) {

@@ -46,7 +46,7 @@ public class DocumentCommands {
             return Availability.unavailable("No one is logged");
         }
         if (configurationClass.getActualProject() == null) {
-            return Availability.unavailable("Choose project");
+            return Availability.unavailable("Project was not chosen");
         }
         if(configurationClass.checkPermission(new Object(){}.getClass().getEnclosingMethod().getName(), permissions)){
             return Availability.available();
@@ -71,7 +71,7 @@ public class DocumentCommands {
             return Availability.unavailable("No one is logged");
         }
         if (configurationClass.getActualProject() == null) {
-            return Availability.unavailable("Choose project");
+            return Availability.unavailable("Project was not chosen");
         }
         if(configurationClass.checkPermission(new Object(){}.getClass().getEnclosingMethod().getName(), permissions)){
             return Availability.available();
@@ -100,7 +100,7 @@ public class DocumentCommands {
             return Availability.unavailable("No one is logged");
         }
         if (configurationClass.getActualProject() == null) {
-            return Availability.unavailable("Choose project");
+            return Availability.unavailable("Project was not chosen");
         }
         if(configurationClass.checkCreator(new Object(){}.getClass().getEnclosingMethod().getName(), permissions)){
             return Availability.available();
@@ -121,7 +121,7 @@ public class DocumentCommands {
             return Availability.unavailable("No one is logged");
         }
         if (configurationClass.getActualProject() == null) {
-            return Availability.unavailable("Choose project");
+            return Availability.unavailable("Project was not chosen");
         }
         if(configurationClass.checkPermission(new Object(){}.getClass().getEnclosingMethod().getName(), permissions)){
             return Availability.available();
@@ -141,7 +141,7 @@ public class DocumentCommands {
             return Availability.unavailable("No one is logged");
         }
         if (configurationClass.getActualProject() == null) {
-            return Availability.unavailable("Choose project");
+            return Availability.unavailable("Project was not chosen");
         }
         if(configurationClass.checkPermission(new Object(){}.getClass().getEnclosingMethod().getName(), permissions)){
             return Availability.available();
@@ -162,7 +162,7 @@ public class DocumentCommands {
             return Availability.unavailable("No one is logged");
         }
         if (configurationClass.getActualProject() == null) {
-            return Availability.unavailable("Choose project");
+            return Availability.unavailable("Project was not chosen");
         }
         if(configurationClass.checkPermission(new Object(){}.getClass().getEnclosingMethod().getName(), permissions)){
             return Availability.available();
@@ -183,7 +183,7 @@ public class DocumentCommands {
             return Availability.unavailable("No one is logged");
         }
         if (configurationClass.getActualProject() == null) {
-            return Availability.unavailable("Choose project");
+            return Availability.unavailable("Project was not chosen");
         }
         if(configurationClass.checkPermission(new Object(){}.getClass().getEnclosingMethod().getName(), permissions)){
             return Availability.available();
