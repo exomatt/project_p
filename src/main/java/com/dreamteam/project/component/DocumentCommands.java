@@ -6,6 +6,7 @@ import com.dreamteam.project.exeption.DBException;
 import com.dreamteam.project.model.Document;
 import com.dreamteam.project.model.Project;
 import com.dreamteam.project.repository.DocumentRepo;
+import com.dreamteam.project.repository.ProjectRepo;
 import com.dreamteam.project.repository.UserRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -27,6 +28,7 @@ import java.util.stream.StreamSupport;
 public class DocumentCommands {
 
     private final DocumentRepo documentRepo;
+    private final ProjectRepo projectRepo;
     private final UserRepo userRepo;
     private final ConfigurationClass configurationClass;
     private Map<String, List<String>> permissions = new HashMap<>();
@@ -122,6 +124,13 @@ public class DocumentCommands {
 
     @ShellMethod("Delete document by ID")
     public String deleteDocumentById(Long id) {
+        List<Document> documents = documentRepo.findByDocumentId(id);
+        if (documents.isEmpty())
+            return "Cannot find that document";
+        Document document = documents.get(0);
+        Project project = document.getProject();
+        project.removeFromList(document);
+        projectRepo.save(project);
         documentRepo.deleteById(id);
         return "Successfully deleted document with ID " + id;
     }
