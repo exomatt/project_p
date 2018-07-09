@@ -81,13 +81,12 @@ public class Document {
 
     @Override
     public String toString() {
-        return "Document{" +
-                "documentId=" + documentId +
-                ", documentName='" + documentName + '\'' +
-                ", documentDescription='" + documentDescription + '\'' +
-                ", creatorId=" + creatorId +
-                ", topic='" + topic + '\'' +
-                ", projectName=" + project.getProjectName() +
-                '}';
+        return "Document\n" +
+                "\tId: " + documentId +
+                "\n\tName: '" + documentName + '\'' +
+                "\n\tDescription: '" + documentDescription + '\'' +
+                "\n\tCreator Id: " + creatorId +
+                "\n\tTopic: '" + topic + '\'' +
+                "\n\tProject name: " + project.getProjectName();
     }
 }
