@@ -165,7 +165,7 @@ public class UserCommands {
                     return "This role of user in project already exist";
                 } else {
 
-                    assigment.setRole(newwRole);
+                    assigment.setRole(newSettingRole);
                     assigment = assigmentRepo.save(assigment);
                     return assigment.toString();
                 }
