@@ -136,6 +136,7 @@ public class ProjectCommands {
             List<Document> documentList = projectMigration.getDocuments();
             documentList.addAll(documentListToMigration);
             projectMigration.setDocuments(documentList);
+            projectRepo.save(projectMigration);
 
             projectRepo.deleteById(deletedProjectId);
             configurationClass.setActualProject(null);
