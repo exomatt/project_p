@@ -59,7 +59,7 @@ public class ConfigurationClass {
             user = null;
             String password;
             CryptoPassword cryptoPassword = new CryptoPassword();
-            password = cryptoPassword.encrypt("");
+            password = cryptoPassword.encrypt("admin");
             if (password.isEmpty())
                 throw new ApplicationException("A problem occurred while attempting to run the application");
             if (userRepo.findByLoginAndPassword("admin", password) == null) {

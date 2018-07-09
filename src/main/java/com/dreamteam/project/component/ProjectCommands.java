@@ -49,11 +49,14 @@ public class ProjectCommands {
 
     @ShellMethodAvailability
     public Availability createProjectAvailability() {
+        String methodName = new Object() {}
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
         if (configurationClass.getUser() == null) {
             return Availability.unavailable("No one is logged");
         }
-        if (configurationClass.checkPermission(new Object() {
-        }.getClass().getEnclosingMethod().getName(), permissions)) {
+        if (configurationClass.checkPermission(methodName, permissions)) {
             return Availability.available();
         }
         return Availability.unavailable("Access denied");
@@ -80,14 +83,17 @@ public class ProjectCommands {
 
     @ShellMethodAvailability
     public Availability updateProjectAvailability() {
+        String methodName = new Object() {}
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
         if (configurationClass.getUser() == null) {
             return Availability.unavailable("No one is logged");
         }
         if (configurationClass.getActualProject() == null) {
             return Availability.unavailable("Project was not chosen");
         }
-        if (configurationClass.checkPermission(new Object() {
-        }.getClass().getEnclosingMethod().getName(), permissions)) {
+        if (configurationClass.checkPermission(methodName, permissions)) {
             return Availability.available();
         }
         return Availability.unavailable("Access denied");
@@ -103,14 +109,17 @@ public class ProjectCommands {
 
     @ShellMethodAvailability
     public Availability detailProjectAvailability() {
+        String methodName = new Object() {}
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
         if (configurationClass.getUser() == null) {
             return Availability.unavailable("No one is logged");
         }
         if (configurationClass.getActualProject() == null) {
             return Availability.unavailable("Project was not chosen");
         }
-        if (configurationClass.checkPermission(new Object() {
-        }.getClass().getEnclosingMethod().getName(), permissions)) {
+        if (configurationClass.checkPermission(methodName, permissions)) {
             return Availability.available();
         }
         return Availability.unavailable("Access denied");
@@ -170,14 +179,17 @@ public class ProjectCommands {
 
     @ShellMethodAvailability
     public Availability deleteProjectAvailability() {
+        String methodName = new Object() {}
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
         if (configurationClass.getUser() == null) {
             return Availability.unavailable("No one is logged");
         }
         if (configurationClass.getActualProject() == null) {
             return Availability.unavailable("Project was not chosen");
         }
-        if (configurationClass.checkPermission(new Object() {
-        }.getClass().getEnclosingMethod().getName(), permissions)) {
+        if (configurationClass.checkPermission(methodName, permissions)) {
             return Availability.available();
         }
         return Availability.unavailable("Access denied");
@@ -192,14 +204,17 @@ public class ProjectCommands {
 
     @ShellMethodAvailability
     public Availability listAllProjectsAvailability() {
+        String methodName = new Object() {}
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
         if (configurationClass.getUser() == null) {
             return Availability.unavailable("No one is logged");
         }
         if (!configurationClass.getUser().getLastName().equals("Administrator")) {
             return Availability.unavailable("You are not a admin");
         }
-        if (configurationClass.checkPermission(new Object() {
-        }.getClass().getEnclosingMethod().getName(), permissions)) {
+        if (configurationClass.checkPermission(methodName, permissions)) {
             return Availability.available();
         }
         return Availability.unavailable("Access denied");
@@ -228,11 +243,14 @@ public class ProjectCommands {
 
     @ShellMethodAvailability
     public Availability listProjectsAvailability() {
+        String methodName = new Object() {}
+                .getClass()
+                .getEnclosingMethod()
+                .getName();
         if (configurationClass.getUser() == null) {
             return Availability.unavailable("No one is logged");
         }
-        if (configurationClass.checkPermission(new Object() {
-        }.getClass().getEnclosingMethod().getName(), permissions)) {
+        if (configurationClass.checkPermission(methodName, permissions)) {
             return Availability.available();
         }
         return Availability.unavailable("Access denied");

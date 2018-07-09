@@ -36,12 +36,12 @@ public class LoginCommands {
                 return "Problem with encryption";
             User loggedUser = userRepo.findByLoginAndPassword(login, password);
             if (loggedUser == null) {
-                throw new DBException("A user with login " + login + " cannot be found");
+                throw new DBException("Invalid login or password");
             }
             configurationClass.setUser(loggedUser);
             return "welcome " + loggedUser.getLastName();
         } catch (DBException e) {
-            log.error("Cannot find user with login {}", login, e);
+            log.error("Invalid login or password", login, password, e);
             return e.getMessage();
         }
     }
