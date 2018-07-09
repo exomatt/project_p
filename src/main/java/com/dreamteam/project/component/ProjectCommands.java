@@ -63,7 +63,7 @@ public class ProjectCommands {
         return Availability.unavailable("Access denied");
     }
 
-    @ShellMethod("Update project (id, name, description, creator )")
+    @ShellMethod("Update project (id, name, description)")
     public String updateProject(@ShellOption(defaultValue = "-1", value = "-i") Long projectId, @ShellOption(defaultValue = "", value = "-n") String name, @ShellOption(defaultValue = "", value = "-d") String description) throws DBException {
         try {
             Project project = projectRepo.findById(projectId).orElseThrow(() -> new DBException("A project with id " + projectId + " cannot be found"));

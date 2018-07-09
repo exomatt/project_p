@@ -120,7 +120,7 @@ public class UserCommands {
         return Availability.unavailable("Access denied");
     }
 
-    @ShellMethod("Delete user role in project")
+    @ShellMethod("Delete user role in project (userLogin, roleName)")
     public String deleteUserRole(String userLogin, String roleName) {
         try {
             Role role = Role.valueOf(roleName);

@@ -92,7 +92,7 @@ public class DocumentCommands {
         return Availability.unavailable("Access denied");
     }
 
-    @ShellMethod("Update document")
+    @ShellMethod("Update document (documentId, documentName, description, topic")
     public String updateDocument(@ShellOption(defaultValue = "-1" ,value = "-i") Long id, @ShellOption(defaultValue = "",value = "-n") String documentName, @ShellOption(defaultValue = "",value = "-d") String desc, @ShellOption(defaultValue = "", value = "-t") String topic) throws DBException {
         try {
             Document document = documentRepo.findById(id).orElseThrow(() -> new DBException("A document with id " + id + " cannot be found"));
