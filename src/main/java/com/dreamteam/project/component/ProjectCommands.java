@@ -67,11 +67,6 @@ public class ProjectCommands {
     public String updateProject(@ShellOption(defaultValue = "-1") Long projectId, @ShellOption(defaultValue = "") String name, @ShellOption(defaultValue = "") String description, String creator) throws DBException {
         try {
             Project project = projectRepo.findById(projectId).orElseThrow(() -> new DBException("A project with id " + projectId + " cannot be found"));
-            Long creatorId = Long.parseLong(creator);
-            if (creatorId != -1) {
-                userRepo.findById(creatorId).orElseThrow(() -> new DBException("A user  with id " + creator + " cannot be found"));
-                project.setCreatorId(creatorId);
-            }
             if (!name.isEmpty())
                 project.setProjectName(name);
             if (!description.isEmpty())
@@ -81,6 +76,9 @@ public class ProjectCommands {
         } catch (NumberFormatException exn) {
             log.error("Error in parsing id", exn);
             return exn.getMessage();
+        } catch (DBException exception) {
+            log.error("Cannot find project with id {}", projectId, exception);
+            return exception.getMessage();
         }
     }
 
