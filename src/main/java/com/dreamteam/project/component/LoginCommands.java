@@ -61,6 +61,7 @@ public class LoginCommands {
         }
         String name = configurationClass.getUser().getLastName();
         configurationClass.setUser(null);
+        configurationClass.setActualProject(null);
         return "Good bye "+name;
     }
 

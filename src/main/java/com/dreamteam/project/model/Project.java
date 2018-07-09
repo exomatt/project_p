@@ -1,14 +1,9 @@
 package com.dreamteam.project.model;
 
-import com.sun.deploy.util.StringUtils;
-import lombok.Data;
-import org.hibernate.mapping.Fetchable;
-
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import javax.persistence.*;
 
 
 @Entity
@@ -25,7 +20,7 @@ public class Project {
     private Long creatorId;
     @Column(name = "PROJECT_DESC", nullable = false)
     private String projectDescription;
-    @OneToMany(mappedBy="project", fetch=FetchType.EAGER)
+    @OneToMany(mappedBy = "project", fetch = FetchType.EAGER,cascade = CascadeType.ALL)
     private List<Document> documents = new ArrayList<>();
 
     public Project() {
@@ -98,7 +93,7 @@ public class Project {
                 "\n\tName: '" + projectName + '\'' +
                 "\n\tCreator Id: " + creatorId +
                 "\n\tDescription: '" + projectDescription + '\'' +
-                "\n\n\tDocuments: \n\t" + documents+
+                "\n\n\tDocuments: \n\t" + documents +
                 '\n';
     }
 }
