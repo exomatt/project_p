@@ -52,9 +52,7 @@ public class Assigment {
 
     @Override
     public String toString() {
-        return "Assigment{" +
-                "user=" + user +
-                ", role=" + role +
-                '}';
+        return "Assigment: \n\t"+ user +
+                "\n\trole: " + role;
     }
 }

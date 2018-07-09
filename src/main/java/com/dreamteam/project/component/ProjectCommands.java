@@ -94,8 +94,7 @@ public class ProjectCommands {
     @ShellMethod("Show project details - which users are in which roles")
     public String detailProject() {
         Project project = configurationClass.getActualProject();
-        System.out.println(project);
-        return assigmentRepo.findByProjectProjectId(project.getProjectId()).stream()
+        return project.toString() + assigmentRepo.findByProjectProjectId(project.getProjectId()).stream()
                 .map(Assigment::toString)
                 .collect(Collectors.joining("\n"));
     }
