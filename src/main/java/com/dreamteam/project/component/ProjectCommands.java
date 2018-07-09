@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.shell.Availability;
 import org.springframework.shell.standard.*;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import java.util.HashMap;
@@ -130,7 +131,7 @@ public class ProjectCommands {
     public String deleteProject(Long deletedProjectId, @ShellOption(defaultValue = "-1") Long migrateProjectId) {
 
         if (migrateProjectId == -1) {
-            deleteAssigment(deletedProjectId);
+            deleteAssigmentWithProjectId(deletedProjectId);
             projectRepo.deleteById(deletedProjectId);
             configurationClass.setActualProject(null);
             return "Successfully deleted project with ID " + deletedProjectId + " and logout of it";
@@ -142,8 +143,7 @@ public class ProjectCommands {
             if (documentListToMigration.isEmpty()) {
                 throw new DBException("In project " + deletedProjectId + " there aren't documents");
             }
-            List<Document> documentList = projectMigration.getDocuments();
-            for (Document doc:documentListToMigration) {
+            for (Document doc : documentListToMigration) {
                 Document document = new Document();
                 document.setDocumentName(doc.getDocumentName());
                 document.setTopic(doc.getTopic());
@@ -157,7 +157,7 @@ public class ProjectCommands {
             projectDeleted.setDocuments(null);
             projectRepo.save(projectMigration);
 
-            deleteAssigment(deletedProjectId);
+            deleteAssigmentWithProjectId(deletedProjectId);
             projectRepo.deleteById(deletedProjectId);
             configurationClass.setActualProject(null);
             return "Successfully deleted project with ID " + deletedProjectId + ", migrate document to " + migrateProjectId + " and logout of it";
@@ -167,11 +167,9 @@ public class ProjectCommands {
         }
     }
 
-    public void deleteAssigment(Long id) {
+    @Transactional
+    public void deleteAssigmentWithProjectId(Long id) {
         List<Assigment> assigments = assigmentRepo.findByProjectProjectId(id);
-        if (assigments.isEmpty()) {
-            return;
-        }
         for (Assigment as : assigments) {
             assigmentRepo.delete(as);
         }
