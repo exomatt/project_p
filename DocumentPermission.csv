@@ -1,7 +1,6 @@
 createDocument,Manager,Engineer
 findDocumentById,Manager,Engineer,HR
 updateDocument,Creator
-listAllDocuments,Manager,Engineer,HR
 deleteDocumentById,Manager
 viewDocumentByName,Manager,Engineer,HR
 viewDocumentById,Manager,Engineer,HR

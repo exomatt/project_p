@@ -108,27 +108,6 @@ public class DocumentCommands {
         return Availability.unavailable("Access denied");
     }
 
-    @ShellMethod("List all documents")
-    public String listAllDocuments() {
-        return StreamSupport.stream(documentRepo.findAll().spliterator(), false)
-                .map(Document::toString)
-                .collect(Collectors.joining("\n"));
-    }
-
-    @ShellMethodAvailability
-    public Availability listAllDocumentsAvailability(){
-        if(configurationClass.getUser()==null){
-            return Availability.unavailable("No one is logged");
-        }
-        if (configurationClass.getActualProject() == null) {
-            return Availability.unavailable("Project was not chosen");
-        }
-        if(configurationClass.checkPermission(new Object(){}.getClass().getEnclosingMethod().getName(), permissions)){
-            return Availability.available();
-        }
-        return Availability.unavailable("Access denied");
-    }
-
     @ShellMethod("Delete document by ID")
     public String deleteDocumentById(Long id) {
         documentRepo.deleteById(id);
