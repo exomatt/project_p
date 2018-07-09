@@ -54,7 +54,7 @@ public class ConfigurationClass {
     }
 
     @PostConstruct
-    public void  createUser() throws ApplicationException {
+    public void  createUser() {
         try {
             user = null;
             String password;
@@ -68,9 +68,8 @@ public class ConfigurationClass {
             } else {
                 admin = userRepo.findByLoginAndPassword("admin", password);
             }
-            //return "";
         } catch (ApplicationException exception) {
-            //return exception.getMessage();
+            log.error("Something goes wrong with encryption ");
         }
 
     }

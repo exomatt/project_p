@@ -1,6 +1,6 @@
 package com.dreamteam.project.exeption;
 
-public class ApplicationException extends RuntimeException {
+public class ApplicationException extends Exception {
     public ApplicationException(String message) {
         super(message);
     }

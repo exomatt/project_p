@@ -84,7 +84,9 @@ public class Project {
     public void addToList(Document document) {
         documents.add(document);
     }
-
+    public  void removeFromList(Document document){
+        documents.remove(document);
+    }
     public String toStringShort() {
         return "Project\n" +
                 "\tId: " + projectId +
