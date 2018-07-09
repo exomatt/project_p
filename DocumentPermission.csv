@@ -1,8 +1,8 @@
 createDocument,Manager,Engineer
-findById,Manager,Engineer,HR
+findDocumentById,Manager,Engineer,HR
 updateDocument,Creator
-listDocuments,Creator
-listAllDocuments,Administrator
-findAll,Manager,Engineer,HR
-deleteById,Manager
-findByName,Manager,Engineer,HR
+listAllDocuments,Manager,Engineer,HR
+deleteDocumentById,Manager
+viewDocumentByName,Manager,Engineer,HR
+viewDocumentById,Manager,Engineer,HR
+listDocuments,Manager,Engineer,HR

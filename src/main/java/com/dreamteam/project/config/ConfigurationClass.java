@@ -2,6 +2,7 @@ package com.dreamteam.project.config;
 
 import com.dreamteam.project.crypto.CryptoPassword;
 import com.dreamteam.project.model.Assigment;
+import com.dreamteam.project.model.Document;
 import com.dreamteam.project.model.Project;
 import com.dreamteam.project.model.User;
 import com.dreamteam.project.repository.AssigmentRepo;
@@ -69,17 +70,42 @@ public class ConfigurationClass {
         }
     }
 
-    public boolean checkPermission(String methodName, Map<String, List<String>> permissions) {
+    public boolean checkCreator(String methodName, Map<String, List<String>> permissions){
         methodName = methodName.replace("Availability","");
-        System.out.println(methodName);
-        if(user.getLogin().equals(admin.getLogin())){
+        List<Assigment> assigmentList = assigmentRepo.findByUserUserId(user.getUserId());
+        if(assigmentList!=null){
             for (Map.Entry<String, List<String>> entry : permissions.entrySet()) {
                 String key = entry.getKey();
                 List<String> roles = entry.getValue();
 
                 if(methodName.equals(key)){
-                    for (String role : roles) {
-                        if(role.equals(user.getLastName())){
+                    for (Assigment assigment : assigmentList) {
+                        if(assigment.getProject().getProjectId()==actualProject.getProjectId()){
+                            for (String role : roles) {
+                                for (Document doc: assigment.getProject().getDocuments()) {
+                                    if(user.getUserId()==doc.getCreatorId()){
+                                        return true;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean checkPermission(String methodName, Map<String, List<String>> permissions) {
+        methodName = methodName.replace("Availability","");
+        if(user.getLastName().equals(admin.getLastName())){
+            for (Map.Entry<String, List<String>> entry : permissions.entrySet()) {
+                String key = entry.getKey();
+                List<String> rolesList = entry.getValue();
+
+                if(methodName.equals(key)){
+                    for (String role : rolesList) {
+                        if(role.equals("Administrator")){
                             return true;
                         }
                     }
@@ -87,18 +113,26 @@ public class ConfigurationClass {
             }
         }
         List<Assigment> assigmentList = assigmentRepo.findByUserUserId(user.getUserId());
-        if(user!=null&&assigmentList!=null){
+        if(assigmentList!=null){
             for (Map.Entry<String, List<String>> entry : permissions.entrySet()) {
                 String key = entry.getKey();
                 List<String> roles = entry.getValue();
 
                 if(methodName.equals(key)){
                     for (Assigment assigment : assigmentList) {
-                        if(assigment.getProject()==actualProject){
+                        if(actualProject==null){
                             for (String role : roles) {
-                                System.out.println(assigment.getRole().name());
                                 if(role.equals(assigment.getRole().name())){
                                     return true;
+                                }
+                            }
+                        }
+                        else{
+                            if(assigment.getProject().getProjectId()==actualProject.getProjectId()){
+                                for (String role : roles) {
+                                    if(role.equals(assigment.getRole().name())){
+                                        return true;
+                                    }
                                 }
                             }
                         }
@@ -126,7 +160,6 @@ public class ConfigurationClass {
                 }
                 permissions.put(permission[0], roles);
             }
-            System.out.println(permissions);
             return permissions;
         } catch (IOException e) {
             log.error("File not found", e);

@@ -57,7 +57,7 @@ public class UserCommands {
         return Availability.unavailable("Access denied");
     }
 
-    @ShellMethod("Show users")//Access only for admin
+    @ShellMethod("Show users")
     public void showUsers() {
         List<User> userList = userRepo.findAll();
         for (User user : userList) {
@@ -70,7 +70,7 @@ public class UserCommands {
         if (configurationClass.getUser() == null) {
             return Availability.unavailable("No one is logged");
         }
-        if (configurationClass.checkPermission(new Object() {
+        if (configurationClass.checkPermission(new Object(){
         }.getClass().getEnclosingMethod().getName(), permissions)) {
             return Availability.available();
         }
@@ -99,6 +99,22 @@ public class UserCommands {
             return "Cannot find role";
         }
     }
+
+    @ShellMethodAvailability
+    public Availability addUserToProjectAvailability() {
+        if (configurationClass.getUser() == null) {
+            return Availability.unavailable("No one is logged");
+        }
+        if (configurationClass.getActualProject() == null) {
+            return Availability.unavailable("Choose project");
+        }
+        if (configurationClass.checkPermission(new Object() {
+        }.getClass().getEnclosingMethod().getName(), permissions)) {
+            return Availability.available();
+        }
+        return Availability.unavailable("Access denied");
+    }
+
     @ShellMethod("Delete user role in project")
     public String deleteUserRole(String userLogin, String roleName) {
         try {
@@ -120,6 +136,22 @@ public class UserCommands {
             return "Cannot find role";
         }
     }
+
+    @ShellMethodAvailability
+    public Availability deleteUserRoleAvailability() {
+        if (configurationClass.getUser() == null) {
+            return Availability.unavailable("No one is logged");
+        }
+        if (configurationClass.getActualProject() == null) {
+            return Availability.unavailable("Choose project");
+        }
+        if (configurationClass.checkPermission(new Object() {
+        }.getClass().getEnclosingMethod().getName(), permissions)) {
+            return Availability.available();
+        }
+        return Availability.unavailable("Access denied");
+    }
+
     @ShellMethod("Update user role(userId, projectId, roleName, newRoleName)")
     public String updateUserRole(@ShellOption(defaultValue = "-1") String userId, @ShellOption(defaultValue = "-1") String projectId, @ShellOption(defaultValue = "") String role, @ShellOption(defaultValue = "") String newRole) throws DBException {
         Long id = Long.parseLong(userId);
@@ -147,8 +179,9 @@ public class UserCommands {
             return "User with project not found";
         }
     }
+
     @ShellMethodAvailability
-    public Availability addUserToProjectAvailability() {
+    public Availability updateUserRoleAvailability() {
         if (configurationClass.getUser() == null) {
             return Availability.unavailable("No one is logged");
         }
@@ -156,13 +189,8 @@ public class UserCommands {
         }.getClass().getEnclosingMethod().getName(), permissions)) {
             return Availability.available();
         }
-        if (configurationClass.getActualProject() == null) {
-            return Availability.unavailable("Choose project");
-        }
         return Availability.unavailable("Access denied");
     }
-
-
 
     @PostConstruct
     public void loadPermissions() {

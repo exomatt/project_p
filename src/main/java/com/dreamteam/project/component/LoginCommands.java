@@ -10,9 +10,11 @@ import com.dreamteam.project.repository.UserRepo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.shell.Availability;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
+import org.springframework.shell.standard.ShellMethodAvailability;
 
 
 @Slf4j
@@ -27,9 +29,6 @@ public class LoginCommands {
 
     @ShellMethod("User login (login, password)")
     public String login(String login, String password) {
-        if(configurationClass.getUser()!=null){
-            return "To login you should logout first";
-        }
         try {
             CryptoPassword cryptoPassword = new CryptoPassword();
             password = cryptoPassword.encrypt(password);
@@ -43,14 +42,34 @@ public class LoginCommands {
             return "welcome " + loggedUser.getLastName();
         } catch (DBException e) {
             log.error("Cannot find user with login {}", login, e);
-            return "The user with login " + login + " cannot be found";
+            return e.getMessage();
         }
+    }
+
+    @ShellMethodAvailability
+    public Availability loginAvailability(){
+        if(configurationClass.getUser()!=null){
+            return Availability.unavailable("To login you should logout first");
+        }
+        return Availability.available();
     }
 
     @ShellMethod("User logout")
     public String logout() {
+        if(configurationClass.getUser()==null){
+            return "No one is logged";
+        }
+        String name = configurationClass.getUser().getLastName();
         configurationClass.setUser(null);
-        return "logout";
+        return "Good bye "+name;
+    }
+
+    @ShellMethodAvailability
+    public Availability logoutAvailability(){
+        if(configurationClass.getUser()==null){
+            return Availability.unavailable("No one is logged");
+        }
+        return Availability.available();
     }
 
     @ShellMethod("Choose project for user (projectID)")
@@ -61,7 +80,7 @@ public class LoginCommands {
             return "Project: " + project.getProjectName();
         } catch (DBException e) {
             log.error("Cannot find project", projectId, e);
-            return "Cannot find project with id " + projectId;
+            return e.getMessage();
         }
     }
 

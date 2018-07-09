@@ -1,3 +1,5 @@
 createNewUser,Administrator
 addUserToProject,Administrator,Manager
 showUsers,Administrator
+deleteUserRole,Administrator,Manager
+updateUserRole,Administrator

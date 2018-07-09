@@ -53,6 +53,9 @@ public class ProjectCommands {
         if(configurationClass.getUser()==null){
             return Availability.unavailable("No one is logged");
         }
+        if(!configurationClass.getUser().getLastName().equals("Administrator")){
+            return Availability.unavailable("You are not a admin");
+        }
         if(configurationClass.checkPermission(new Object(){}.getClass().getEnclosingMethod().getName(), permissions)){
             return Availability.available();
         }
@@ -77,7 +80,7 @@ public class ProjectCommands {
             return project.toString();
         } catch (NumberFormatException exn) {
             log.error("Error in parsing id", exn);
-            return "Wrong id format";
+            return exn.getMessage();
         }
     }
 
@@ -85,6 +88,9 @@ public class ProjectCommands {
     public Availability updateProjectAvailability(){
         if(configurationClass.getUser()==null){
             return Availability.unavailable("No one is logged");
+        }
+        if (configurationClass.getActualProject() == null) {
+            return Availability.unavailable("Choose project");
         }
         if(configurationClass.checkPermission(new Object(){}.getClass().getEnclosingMethod().getName(), permissions)){
             return Availability.available();
@@ -101,6 +107,20 @@ public class ProjectCommands {
                 .collect(Collectors.joining("\n"));
     }
 
+    @ShellMethodAvailability
+    public Availability detailProjectAvailability(){
+        if(configurationClass.getUser()==null){
+            return Availability.unavailable("No one is logged");
+        }
+        if (configurationClass.getActualProject() == null) {
+            return Availability.unavailable("Choose project");
+        }
+        if(configurationClass.checkPermission(new Object(){}.getClass().getEnclosingMethod().getName(), permissions)){
+            return Availability.available();
+        }
+        return Availability.unavailable("Access denied");
+    }
+
 
     @ShellMethod("Delete project by ID")
     public String deleteProject(Long id) {
@@ -112,6 +132,9 @@ public class ProjectCommands {
     public Availability deleteProjectAvailability(){
         if(configurationClass.getUser()==null){
             return Availability.unavailable("No one is logged");
+        }
+        if (configurationClass.getActualProject() == null) {
+            return Availability.unavailable("Choose project");
         }
         if(configurationClass.checkPermission(new Object(){}.getClass().getEnclosingMethod().getName(), permissions)){
             return Availability.available();
@@ -130,6 +153,9 @@ public class ProjectCommands {
     public Availability listAllProjectsAvailability(){
         if(configurationClass.getUser()==null){
             return Availability.unavailable("No one is logged");
+        }
+        if(!configurationClass.getUser().getLastName().equals("Administrator")){
+            return Availability.unavailable("You are not a admin");
         }
         if(configurationClass.checkPermission(new Object(){}.getClass().getEnclosingMethod().getName(), permissions)){
             return Availability.available();
@@ -156,6 +182,17 @@ public class ProjectCommands {
             log.error("You are not logged in", e);
             return "Cannot find role";
         }
+    }
+
+    @ShellMethodAvailability
+    public Availability listProjectsAvailability(){
+        if(configurationClass.getUser()==null){
+            return Availability.unavailable("No one is logged");
+        }
+        if(configurationClass.checkPermission(new Object(){}.getClass().getEnclosingMethod().getName(), permissions)){
+            return Availability.available();
+        }
+        return Availability.unavailable("Access denied");
     }
 
     @PostConstruct

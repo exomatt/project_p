@@ -39,6 +39,20 @@ public class DocumentCommands {
         return ("Document created succesfully: " + document);
     }
 
+    @ShellMethodAvailability
+    public Availability createDocumentAvailability(){
+        if(configurationClass.getUser()==null){
+            return Availability.unavailable("No one is logged");
+        }
+        if (configurationClass.getActualProject() == null) {
+            return Availability.unavailable("Choose project");
+        }
+        if(configurationClass.checkPermission(new Object(){}.getClass().getEnclosingMethod().getName(), permissions)){
+            return Availability.available();
+        }
+        return Availability.unavailable("Access denied");
+    }
+
     @ShellMethod("Find document by ID")
     public String findDocumentById(Long id) throws DBException {
         try {
@@ -48,6 +62,20 @@ public class DocumentCommands {
             log.error("Cannot find document with id {}", id, exception);
             return "The document with id " + id + " cannot be found";
         }
+    }
+
+    @ShellMethodAvailability
+    public Availability findDocumentByIdAvailability(){
+        if(configurationClass.getUser()==null){
+            return Availability.unavailable("No one is logged");
+        }
+        if (configurationClass.getActualProject() == null) {
+            return Availability.unavailable("Choose project");
+        }
+        if(configurationClass.checkPermission(new Object(){}.getClass().getEnclosingMethod().getName(), permissions)){
+            return Availability.available();
+        }
+        return Availability.unavailable("Access denied");
     }
 
     @ShellMethod("Update document")
@@ -66,9 +94,17 @@ public class DocumentCommands {
     }
 
     @ShellMethodAvailability
-    public Availability updateDocumentAvailability() {
-        return Availability.available();
-        //TODO napisac nowe checkPermission tylko dla tworcy dokumentu
+    public Availability updateDocumentAvailability(){
+        if(configurationClass.getUser()==null){
+            return Availability.unavailable("No one is logged");
+        }
+        if (configurationClass.getActualProject() == null) {
+            return Availability.unavailable("Choose project");
+        }
+        if(configurationClass.checkCreator(new Object(){}.getClass().getEnclosingMethod().getName(), permissions)){
+            return Availability.available();
+        }
+        return Availability.unavailable("Access denied");
     }
 
     @ShellMethod("List all documents")
@@ -78,10 +114,38 @@ public class DocumentCommands {
                 .collect(Collectors.joining("\n"));
     }
 
+    @ShellMethodAvailability
+    public Availability listAllDocumentsAvailability(){
+        if(configurationClass.getUser()==null){
+            return Availability.unavailable("No one is logged");
+        }
+        if (configurationClass.getActualProject() == null) {
+            return Availability.unavailable("Choose project");
+        }
+        if(configurationClass.checkPermission(new Object(){}.getClass().getEnclosingMethod().getName(), permissions)){
+            return Availability.available();
+        }
+        return Availability.unavailable("Access denied");
+    }
+
     @ShellMethod("Delete document by ID")
     public String deleteDocumentById(Long id) {
         repo.deleteById(id);
         return "Successfully deleted document with ID " + id;
+    }
+
+    @ShellMethodAvailability
+    public Availability deleteDocumentByIdAvailability(){
+        if(configurationClass.getUser()==null){
+            return Availability.unavailable("No one is logged");
+        }
+        if (configurationClass.getActualProject() == null) {
+            return Availability.unavailable("Choose project");
+        }
+        if(configurationClass.checkPermission(new Object(){}.getClass().getEnclosingMethod().getName(), permissions)){
+            return Availability.available();
+        }
+        return Availability.unavailable("Access denied");
     }
 
     @ShellMethod("View document by name")
@@ -91,11 +155,39 @@ public class DocumentCommands {
                 .collect(Collectors.joining("\n"));
     }
 
+    @ShellMethodAvailability
+    public Availability viewDocumentByNameAvailability(){
+        if(configurationClass.getUser()==null){
+            return Availability.unavailable("No one is logged");
+        }
+        if (configurationClass.getActualProject() == null) {
+            return Availability.unavailable("Choose project");
+        }
+        if(configurationClass.checkPermission(new Object(){}.getClass().getEnclosingMethod().getName(), permissions)){
+            return Availability.available();
+        }
+        return Availability.unavailable("Access denied");
+    }
+
     @ShellMethod("View document by id")
-    public String viewDocument(Long id) {
+    public String viewDocumentById(Long id) {
         return repo.findByDocumentId(id).stream()
                 .map(Document::toString)
                 .collect(Collectors.joining("\n"));
+    }
+
+    @ShellMethodAvailability
+    public Availability viewDocumentByIdAvailability(){
+        if(configurationClass.getUser()==null){
+            return Availability.unavailable("No one is logged");
+        }
+        if (configurationClass.getActualProject() == null) {
+            return Availability.unavailable("Choose project");
+        }
+        if(configurationClass.checkPermission(new Object(){}.getClass().getEnclosingMethod().getName(), permissions)){
+            return Availability.available();
+        }
+        return Availability.unavailable("Access denied");
     }
 
     @ShellMethod("List documents of current user")
@@ -104,6 +196,17 @@ public class DocumentCommands {
         return repo.findByCreatorId(userId).stream()
                 .map(Document::toString)
                 .collect(Collectors.joining("\n"));
+    }
+
+    @ShellMethodAvailability
+    public Availability listDocumentsAvailability(){
+        if(configurationClass.getUser()==null){
+            return Availability.unavailable("No one is logged");
+        }
+        if(configurationClass.checkPermission(new Object(){}.getClass().getEnclosingMethod().getName(), permissions)){
+            return Availability.available();
+        }
+        return Availability.unavailable("Access denied");
     }
 
     @PostConstruct
