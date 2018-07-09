@@ -34,11 +34,14 @@ public class DocumentCommands {
     private Map<String, List<String>> permissions = new HashMap<>();
 
     @ShellMethod("Create document (documentName, description, topic)")
-    public String createDocument(String documentName, String desc, String topic) {
+    public String createDocument(String documentName, String desc, String topic) throws DBException {
         Long creatorId = configurationClass.getUser().getUserId();
         Project project = configurationClass.getActualProject();
         Document document = new Document(null, documentName, desc, creatorId, topic, project);
         document = documentRepo.save(document);
+        Long projectId = project.getProjectId();
+        Project updatedProject = projectRepo.findById(projectId).orElseThrow(() -> new DBException("A project with id " + projectId + " cannot be found"));
+        configurationClass.setActualProject(updatedProject);
         return ("Document created succesfully: " + document);
     }
 
@@ -97,6 +100,9 @@ public class DocumentCommands {
             if (!desc.isEmpty()) document.setDocumentDescription(desc);
             if (!topic.isEmpty()) document.setTopic(topic);
             document = documentRepo.save(document);
+            Long projectId = configurationClass.getActualProject().getProjectId();
+            Project updatedProject = projectRepo.findById(projectId).orElseThrow(() -> new DBException("A project with id " + projectId + " cannot be found"));
+            configurationClass.setActualProject(updatedProject);
             return "Successfully updated the document -> " + document.toString();
         } catch (DBException exception) {
             log.error("Cannot find document with id {}", id, exception);
@@ -123,7 +129,7 @@ public class DocumentCommands {
     }
 
     @ShellMethod("Delete document by ID")
-    public String deleteDocumentById(Long id) {
+    public String deleteDocumentById(Long id) throws DBException {
         List<Document> documents = documentRepo.findByDocumentId(id);
         if (documents.isEmpty())
             return "Cannot find that document";
@@ -132,6 +138,9 @@ public class DocumentCommands {
         project.removeFromList(document);
         projectRepo.save(project);
         documentRepo.deleteById(id);
+        Long projectId = project.getProjectId();
+        Project updatedProject = projectRepo.findById(projectId).orElseThrow(() -> new DBException("A project with id " + projectId + " cannot be found"));
+        configurationClass.setActualProject(updatedProject);
         return "Successfully deleted document with ID " + id;
     }
 
