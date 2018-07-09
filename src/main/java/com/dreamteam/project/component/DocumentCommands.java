@@ -194,9 +194,14 @@ public class DocumentCommands {
     @ShellMethod("List documents of current user")
     public String listDocuments() {
         Long userId = configurationClass.getUser().getUserId();
-        return documentRepo.findByCreatorId(userId).stream()
+        String documents = documentRepo.findByCreatorId(userId).stream()
                 .map(Document::toString)
                 .collect(Collectors.joining("\n"));
+        if (!documents.isEmpty()){
+            return documents;
+        } else {
+            return "You have no documents";
+        }
     }
 
     @ShellMethodAvailability
