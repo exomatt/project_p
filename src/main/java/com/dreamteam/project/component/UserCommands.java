@@ -153,20 +153,19 @@ public class UserCommands {
     }
 
     @ShellMethod("Update user role(userId, projectId, roleName, newRoleName)")
-    public String updateUserRole(@ShellOption(defaultValue = "-1") String userId, @ShellOption(defaultValue = "-1") String projectId, @ShellOption(defaultValue = "") String role, @ShellOption(defaultValue = "") String newRole) throws DBException {
-        Long id = Long.parseLong(userId);
-        Long thisProjectId = Long.parseLong(projectId);
+    public String updateUserRole(@ShellOption(defaultValue = "-1") Long id, @ShellOption(defaultValue = "-1") Long projectId, @ShellOption(defaultValue = "") String role, @ShellOption(defaultValue = "") String newRole) throws DBException {
+
         try {
             if (!role.isEmpty() && !newRole.isEmpty()) {
-                Role newwRole = Role.valueOf(newRole);
+                Role newSettingRole = Role.valueOf(newRole);
                 Role currentRole = Role.valueOf(role);
-                Assigment assigment = assigmentRepo.findByUserUserIdAndProjectProjectIdAndRole(id, thisProjectId, currentRole);
-                Assigment assigment2 = assigmentRepo.findByUserUserIdAndProjectProjectIdAndRole(id, thisProjectId, newwRole);
+                Assigment assigment = assigmentRepo.findByUserUserIdAndProjectProjectIdAndRole(id, projectId, currentRole);
+                Assigment assigment2 = assigmentRepo.findByUserUserIdAndProjectProjectIdAndRole(id, projectId, newSettingRole);
                 if (assigment2 != null) {
                     return "This role of user in project already exist";
                 } else {
 
-                    assigment.setRole(newwRole);
+                    assigment.setRole(newSettingRole);
                     assigment = assigmentRepo.save(assigment);
                     return assigment.toString();
                 }

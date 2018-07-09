@@ -63,10 +63,9 @@ public class ProjectCommands {
     }
 
     @ShellMethod("Update project (id, name, description, creator )")
-    public String updateProject(@ShellOption(defaultValue = "-1") String id, @ShellOption(defaultValue = "") String name, @ShellOption(defaultValue = "") String description, String creator) throws DBException {
+    public String updateProject(@ShellOption(defaultValue = "-1") Long projectId, @ShellOption(defaultValue = "") String name, @ShellOption(defaultValue = "") String description, String creator) throws DBException {
         try {
-            Long projectId = Long.parseLong(id);
-            Project project = projectRepo.findById(projectId).orElseThrow(() -> new DBException("A project with id " + id + " cannot be found"));
+            Project project = projectRepo.findById(projectId).orElseThrow(() -> new DBException("A project with id " + projectId + " cannot be found"));
             Long creatorId = Long.parseLong(creator);
             if (creatorId != -1) {
                 userRepo.findById(creatorId).orElseThrow(() -> new DBException("A user  with id " + creator + " cannot be found"));
