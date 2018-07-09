@@ -1,13 +1,13 @@
 package com.dreamteam.project.model;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @Table(name="DOCUMENT")
 public class Document {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "document_seq", sequenceName = "document_id_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "document_seq")
     @Column(name = "DOCUMENT_ID", nullable = false)
     private Long documentId;
     @Column(name = "DOCUMENT_NAME", nullable = false)
@@ -79,7 +79,6 @@ public class Document {
     public void setTopic(String topic) {
         this.topic = topic;
     }
-
 
     @Override
     public String toString() {

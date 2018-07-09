@@ -80,7 +80,7 @@ public class DocumentCommands {
     }
 
     @ShellMethod("Update document")
-    public String updateDocument(@ShellOption(defaultValue = "-1" ,value = "--id") Long id, @ShellOption(defaultValue = "") String documentName, @ShellOption(defaultValue = "") String desc, @ShellOption(defaultValue = "") String topic) throws DBException {
+    public String updateDocument(@ShellOption(defaultValue = "-1" ,value = "-i") Long id, @ShellOption(defaultValue = "",value = "-n") String documentName, @ShellOption(defaultValue = "",value = "-d") String desc, @ShellOption(defaultValue = "", value = "-t") String topic) throws DBException {
         try {
             Document document = documentRepo.findById(id).orElseThrow(() -> new DBException("A document with id " + id + " cannot be found"));
             if (!documentName.isEmpty()) document.setDocumentName(documentName);

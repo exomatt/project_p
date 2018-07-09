@@ -15,7 +15,8 @@ import javax.persistence.*;
 @Table(name = "PROJECT")
 public class Project {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "project_seq", sequenceName = "project_id_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "project_seq")
     @Column(name = "PROJECT_ID", nullable = false)
     private Long projectId;
     @Column(name = "PROJECT_NAME", nullable = false)
@@ -24,7 +25,7 @@ public class Project {
     private Long creatorId;
     @Column(name = "PROJECT_DESC", nullable = false)
     private String projectDescription;
-    @OneToMany(mappedBy="project", fetch=FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy="project", fetch=FetchType.EAGER)
     private List<Document> documents = new ArrayList<>();
 
     public Project() {

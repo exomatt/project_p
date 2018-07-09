@@ -6,7 +6,8 @@ import javax.persistence.*;
 @Table(name="USER")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @SequenceGenerator(name = "user_seq", sequenceName = "user_id_seq")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "user_seq")
     @Column(name = "USER_ID", nullable = false)
     private Long userId;
     @Column(name = "USER_NAME", nullable = false)
@@ -61,6 +62,6 @@ public class User {
     @Override
     public String toString() {
         return "User: " +
-                "\n\tname: '" + lastName + '\'' +", \n\tlogin: '" + login+ '\'';
+                "\n\tid: '" + userId + '\'' +"\n\tname: '" + lastName + '\'' +", \n\tlogin: '" + login+ '\'';
     }
 }

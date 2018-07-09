@@ -146,7 +146,7 @@ public class UserCommands {
     }
 
     @ShellMethod("Update user role(userId, projectId, roleName, newRoleName)")
-    public String updateUserRole(@ShellOption(defaultValue = "-1") Long id, @ShellOption(defaultValue = "-1") Long projectId, @ShellOption(defaultValue = "") String role, @ShellOption(defaultValue = "") String newRole) throws DBException {
+    public String updateUserRole(@ShellOption(defaultValue = "-1", value = "-i") Long id, @ShellOption(defaultValue = "-1", value = "-pi") Long projectId, @ShellOption(defaultValue = "", value = "-r") String role, @ShellOption(defaultValue = "", value = "-nr") String newRole) throws DBException {
 
         try {
             if (!role.isEmpty() && !newRole.isEmpty()) {
