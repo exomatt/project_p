@@ -1,5 +1,6 @@
 package com.dreamteam.project.component;
 
+import com.dreamteam.project.config.ConfigReader;
 import com.dreamteam.project.config.ConfigurationClass;
 import com.dreamteam.project.exeption.DBException;
 import com.dreamteam.project.model.Assigment;
@@ -125,7 +126,8 @@ public class ProjectCommands {
     @ShellMethod("Delete project by ID")
     public String deleteProject(Long id) {
         projectRepo.deleteById(id);
-        return "Successfully deleted project with ID " + id;
+        configurationClass.setActualProject(null);
+        return "Successfully deleted project with ID " + id+" and logout of it";
     }
 
     @ShellMethodAvailability
@@ -197,9 +199,6 @@ public class ProjectCommands {
 
     @PostConstruct
     public void loadPermissions() {
-        permissions = configurationClass.loadPermissions(this.getClass().getSimpleName());
-        if(permissions.isEmpty()){
-            log.error("Project permissions are not ready to use");
-        }
+        permissions = ConfigReader.loadPermissions(this.getClass().getSimpleName());
     }
 }

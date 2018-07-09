@@ -1,5 +1,6 @@
 package com.dreamteam.project.component;
 
+import com.dreamteam.project.config.ConfigReader;
 import com.dreamteam.project.config.ConfigurationClass;
 import com.dreamteam.project.exeption.DBException;
 import com.dreamteam.project.model.Document;
@@ -211,9 +212,6 @@ public class DocumentCommands {
 
     @PostConstruct
     public void loadPermissions() {
-        permissions = configurationClass.loadPermissions(this.getClass().getSimpleName());
-        if(permissions.isEmpty()){
-            log.error("Document permissions are not ready to use");
-        }
+        permissions = ConfigReader.loadPermissions(this.getClass().getSimpleName());
     }
 }

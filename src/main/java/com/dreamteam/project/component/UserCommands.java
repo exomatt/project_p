@@ -1,5 +1,6 @@
 package com.dreamteam.project.component;
 
+import com.dreamteam.project.config.ConfigReader;
 import com.dreamteam.project.config.ConfigurationClass;
 import com.dreamteam.project.crypto.CryptoPassword;
 import com.dreamteam.project.exeption.DBException;
@@ -82,11 +83,7 @@ public class UserCommands {
         try {
             Role role = Role.valueOf(roleName);
             Project project = configurationClass.getActualProject();
-            if (project == null)
-                return "Project is not choosen";
             User user = userRepo.findByLogin(userLogin);
-            if (user == null)
-                return "User with that login dont exist";
             Long userID = user.getUserId();
             Assigment assigments = assigmentRepo.findByUserUserIdAndProjectProjectIdAndRole(userID, project.getProjectId(), role);
             if (assigments != null)
@@ -120,11 +117,7 @@ public class UserCommands {
         try {
             Role role = Role.valueOf(roleName);
             Project project = configurationClass.getActualProject();
-            if (project == null)
-                return "Project is not choosen";
             User user = userRepo.findByLogin(userLogin);
-            if (user == null)
-                return "User with that login dont exist";
             Long userID = user.getUserId();
             Assigment assigment = assigmentRepo.findByUserUserIdAndProjectProjectIdAndRole(userID, project.getProjectId(), role);
             if (assigment==null)
@@ -194,9 +187,6 @@ public class UserCommands {
 
     @PostConstruct
     public void loadPermissions() {
-        permissions = configurationClass.loadPermissions(this.getClass().getSimpleName());
-        if(permissions.isEmpty()){
-            log.error("User permissions are not ready to use");
-        }
+        permissions = ConfigReader.loadPermissions(this.getClass().getSimpleName());
     }
 }

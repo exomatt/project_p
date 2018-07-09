@@ -80,10 +80,10 @@ public class ConfigurationClass {
 
                 if(methodName.equals(key)){
                     for (Assigment assigment : assigmentList) {
-                        if(assigment.getProject().getProjectId()==actualProject.getProjectId()){
+                        if(assigment.getProject().getProjectId().equals(actualProject.getProjectId())){
                             for (String role : roles) {
                                 for (Document doc: assigment.getProject().getDocuments()) {
-                                    if(user.getUserId()==doc.getCreatorId()){
+                                    if(user.getUserId().equals(doc.getCreatorId())){
                                         return true;
                                     }
                                 }
@@ -128,7 +128,7 @@ public class ConfigurationClass {
                             }
                         }
                         else{
-                            if(assigment.getProject().getProjectId()==actualProject.getProjectId()){
+                            if(assigment.getProject().getProjectId().equals(actualProject.getProjectId())){
                                 for (String role : roles) {
                                     if(role.equals(assigment.getRole().name())){
                                         return true;
@@ -141,29 +141,5 @@ public class ConfigurationClass {
             }
         }
         return false;
-    }
-
-    public Map<String, List<String>> loadPermissions(String className) {
-        Map<String, List<String>> permissions = new HashMap<>();
-        String csvFile = className.replace("Commands", "Permission.csv");
-        String csvSplitBy = ",";
-        String line;
-        try (BufferedReader br = new BufferedReader(new FileReader(csvFile))) {
-
-            while ((line = br.readLine()) != null) {
-
-                List<String> roles = new ArrayList<>();
-                String[] permission = line.split(csvSplitBy);
-
-                for (int i = 1; i < permission.length; i++) {
-                    roles.add(permission[i]);
-                }
-                permissions.put(permission[0], roles);
-            }
-            return permissions;
-        } catch (IOException e) {
-            log.error("File not found", e);
-            return permissions;
-        }
     }
 }
