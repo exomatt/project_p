@@ -93,7 +93,7 @@ public class Project {
                 "\n\tName: '" + projectName + '\'' +
                 "\n\tCreator Id: " + creatorId +
                 "\n\tDescription: '" + projectDescription + '\'' +
-                "\n\n\tDocuments: \n\t" + documents +
+                "\n\tDocuments: \n" + documents +
                 '\n';
     }
 }

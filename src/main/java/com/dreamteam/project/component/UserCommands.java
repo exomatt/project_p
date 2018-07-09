@@ -43,8 +43,7 @@ public class UserCommands {
             return "Problem with encryption";
         User user = new User(null, lastName, login, password);
         user = userRepo.save(user);
-        System.out.println(user.toString());
-        return "User created succesfully.";
+        return "User created succesfully: \n" + user.toString();
     }
 
     @ShellMethodAvailability
