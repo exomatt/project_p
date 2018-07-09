@@ -92,12 +92,12 @@ public class Project {
 
     @Override
     public String toString() {
-        return "Project{" +
-                "projectId=" + projectId +
-                ", projectName='" + projectName + '\'' +
-                ", creatorId=" + creatorId +
-                ", projectDescription='" + projectDescription + '\'' +
-                ", documents=" + documents+
-                '}';
+        return "Project\n" +
+                "\tId: " + projectId +
+                "\n\tName: '" + projectName + '\'' +
+                "\n\tCreator Id: " + creatorId +
+                "\n\tDescription: '" + projectDescription + '\'' +
+                "\n\n\tDocuments: \n\t" + documents+
+                '\n';
     }
 }
