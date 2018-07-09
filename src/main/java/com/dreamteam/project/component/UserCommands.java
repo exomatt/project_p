@@ -157,7 +157,7 @@ public class UserCommands {
         Long id = Long.parseLong(userId);
         Long thisProjectId = Long.parseLong(projectId);
         try {
-            if (!role.isEmpty() && newRole.isEmpty()) {
+            if (!role.isEmpty() && !newRole.isEmpty()) {
                 Role newwRole = Role.valueOf(newRole);
                 Role currentRole = Role.valueOf(role);
                 Assigment assigment = assigmentRepo.findByUserUserIdAndProjectProjectIdAndRole(id, thisProjectId, currentRole);
@@ -171,12 +171,12 @@ public class UserCommands {
                     return assigment.toString();
                 }
             } else {
-                return "Wrong parameters of roles";
+                return "Wrong parameters";
             }
 
         } catch (IllegalArgumentException e) {
             log.error("Connection between this user and project not exist{}", e);
-            return "User with project not found";
+            return e.getMessage();
         }
     }
 
