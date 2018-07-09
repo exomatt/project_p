@@ -1,6 +1,7 @@
 package com.dreamteam.project.config;
 
 import com.dreamteam.project.crypto.CryptoPassword;
+import com.dreamteam.project.exeption.ApplicationException;
 import com.dreamteam.project.model.Assigment;
 import com.dreamteam.project.model.Document;
 import com.dreamteam.project.model.Project;
@@ -53,21 +54,25 @@ public class ConfigurationClass {
     }
 
     @PostConstruct
-    public void createUser(){
-        user=null;
-        String password;
-        CryptoPassword cryptoPassword = new CryptoPassword();
-        password = cryptoPassword.encrypt("admin");
-        if (password.isEmpty())
-            throw new RuntimeException();
-        //TODO Something better than this exeption!! maybe own exeption? / just for demo
-        if(userRepo.findByLoginAndPassword("admin",password)==null){
-            admin=new User("Administrator", "admin", password);
-            userRepo.save(admin);
+    public String createUser() throws ApplicationException {
+        try {
+            user = null;
+            String password;
+            CryptoPassword cryptoPassword = new CryptoPassword();
+            password = cryptoPassword.encrypt("");
+            if (password.isEmpty())
+                throw new ApplicationException("A problem occurred while attempting to run the application");
+            if (userRepo.findByLoginAndPassword("admin", password) == null) {
+                admin = new User("Administrator", "admin", password);
+                userRepo.save(admin);
+            } else {
+                admin = userRepo.findByLoginAndPassword("admin", password);
+            }
+            return "";
+        } catch (ApplicationException exception) {
+            return exception.getMessage();
         }
-        else{
-            admin=userRepo.findByLoginAndPassword("admin",password);
-        }
+
     }
 
     public boolean checkCreator(String methodName, Map<String, List<String>> permissions){
