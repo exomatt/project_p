@@ -1,6 +1,8 @@
 package com.dreamteam.project.model;
 
 import javax.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name="DOCUMENT")
@@ -20,6 +22,8 @@ public class Document {
     @ManyToOne
     @JoinColumn(name="PROJECT_ID")
     private Project project;
+    @OneToMany(mappedBy = "project", fetch = FetchType.EAGER,cascade = CascadeType.REMOVE)
+    private List<Document> documents = new ArrayList<>();
 
     public Document(){}
     public Document(Long id,String documentName, String documentDescription, Long creatorId,String topic,Project project){
