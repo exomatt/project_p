@@ -10,7 +10,6 @@ import com.dreamteam.project.model.Role;
 import com.dreamteam.project.repository.AssigmentRepo;
 import com.dreamteam.project.repository.ProjectRepo;
 import com.dreamteam.project.repository.UserRepo;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,10 +17,6 @@ import org.springframework.shell.Availability;
 import org.springframework.shell.standard.*;
 
 import javax.annotation.PostConstruct;
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,11 +46,12 @@ public class ProjectCommands {
     }
 
     @ShellMethodAvailability
-    public Availability createProjectAvailability(){
-        if(configurationClass.getUser()==null){
+    public Availability createProjectAvailability() {
+        if (configurationClass.getUser() == null) {
             return Availability.unavailable("No one is logged");
         }
-        if(configurationClass.checkPermission(new Object(){}.getClass().getEnclosingMethod().getName(), permissions)){
+        if (configurationClass.checkPermission(new Object() {
+        }.getClass().getEnclosingMethod().getName(), permissions)) {
             return Availability.available();
         }
         return Availability.unavailable("Access denied");
@@ -81,14 +77,15 @@ public class ProjectCommands {
     }
 
     @ShellMethodAvailability
-    public Availability updateProjectAvailability(){
-        if(configurationClass.getUser()==null){
+    public Availability updateProjectAvailability() {
+        if (configurationClass.getUser() == null) {
             return Availability.unavailable("No one is logged");
         }
         if (configurationClass.getActualProject() == null) {
             return Availability.unavailable("Project was not chosen");
         }
-        if(configurationClass.checkPermission(new Object(){}.getClass().getEnclosingMethod().getName(), permissions)){
+        if (configurationClass.checkPermission(new Object() {
+        }.getClass().getEnclosingMethod().getName(), permissions)) {
             return Availability.available();
         }
         return Availability.unavailable("Access denied");
@@ -104,14 +101,15 @@ public class ProjectCommands {
     }
 
     @ShellMethodAvailability
-    public Availability detailProjectAvailability(){
-        if(configurationClass.getUser()==null){
+    public Availability detailProjectAvailability() {
+        if (configurationClass.getUser() == null) {
             return Availability.unavailable("No one is logged");
         }
         if (configurationClass.getActualProject() == null) {
             return Availability.unavailable("Project was not chosen");
         }
-        if(configurationClass.checkPermission(new Object(){}.getClass().getEnclosingMethod().getName(), permissions)){
+        if (configurationClass.checkPermission(new Object() {
+        }.getClass().getEnclosingMethod().getName(), permissions)) {
             return Availability.available();
         }
         return Availability.unavailable("Access denied");
@@ -121,41 +119,55 @@ public class ProjectCommands {
     @ShellMethod("Delete project by ID (if you wanna migrate documents please enter project id as second value)")
     public String deleteProject(Long deletedProjectId, @ShellOption(defaultValue = "-1") Long migrateProjectId) {
 
-        if(migrateProjectId==-1){
+        if (migrateProjectId == -1) {
+            deleteAssigment(deletedProjectId);
             projectRepo.deleteById(deletedProjectId);
             configurationClass.setActualProject(null);
-            return "Successfully deleted project with ID " + deletedProjectId +" and logout of it";
+            return "Successfully deleted project with ID " + deletedProjectId + " and logout of it";
         }
         try {
             Project projectDeleted = projectRepo.findById(deletedProjectId).orElseThrow(() -> new DBException("A project with id " + deletedProjectId + " cannot be found"));
             Project projectMigration = projectRepo.findById(migrateProjectId).orElseThrow(() -> new DBException("A project with id " + migrateProjectId + " cannot be found"));
             List<Document> documentListToMigration = projectDeleted.getDocuments();
-            if(documentListToMigration.isEmpty()){
-               throw new DBException("In project "+deletedProjectId+" there aren't documents");
+            if (documentListToMigration.isEmpty()) {
+                throw new DBException("In project " + deletedProjectId + " there aren't documents");
             }
             List<Document> documentList = projectMigration.getDocuments();
             documentList.addAll(documentListToMigration);
             projectMigration.setDocuments(documentList);
+
             projectRepo.save(projectMigration);
 
+            deleteAssigment(deletedProjectId);
             projectRepo.deleteById(deletedProjectId);
             configurationClass.setActualProject(null);
-            return "Successfully deleted project with ID " + deletedProjectId +", migrate document to " + migrateProjectId + " and logout of it";
+            return "Successfully deleted project with ID " + deletedProjectId + ", migrate document to " + migrateProjectId + " and logout of it";
         } catch (DBException e) {
             log.error("Migration documents is not working", e);
             return e.getMessage();
         }
     }
 
+    public void deleteAssigment(Long id) {
+        List<Assigment> assigments = assigmentRepo.findByProjectProjectId(id);
+        if (assigments.isEmpty()) {
+            return;
+        }
+        for (Assigment as : assigments) {
+            assigmentRepo.delete(as);
+        }
+    }
+
     @ShellMethodAvailability
-    public Availability deleteProjectAvailability(){
-        if(configurationClass.getUser()==null){
+    public Availability deleteProjectAvailability() {
+        if (configurationClass.getUser() == null) {
             return Availability.unavailable("No one is logged");
         }
         if (configurationClass.getActualProject() == null) {
             return Availability.unavailable("Project was not chosen");
         }
-        if(configurationClass.checkPermission(new Object(){}.getClass().getEnclosingMethod().getName(), permissions)){
+        if (configurationClass.checkPermission(new Object() {
+        }.getClass().getEnclosingMethod().getName(), permissions)) {
             return Availability.available();
         }
         return Availability.unavailable("Access denied");
@@ -169,14 +181,15 @@ public class ProjectCommands {
     }
 
     @ShellMethodAvailability
-    public Availability listAllProjectsAvailability(){
-        if(configurationClass.getUser()==null){
+    public Availability listAllProjectsAvailability() {
+        if (configurationClass.getUser() == null) {
             return Availability.unavailable("No one is logged");
         }
-        if(!configurationClass.getUser().getLastName().equals("Administrator")){
+        if (!configurationClass.getUser().getLastName().equals("Administrator")) {
             return Availability.unavailable("You are not a admin");
         }
-        if(configurationClass.checkPermission(new Object(){}.getClass().getEnclosingMethod().getName(), permissions)){
+        if (configurationClass.checkPermission(new Object() {
+        }.getClass().getEnclosingMethod().getName(), permissions)) {
             return Availability.available();
         }
         return Availability.unavailable("Access denied");
@@ -204,11 +217,12 @@ public class ProjectCommands {
     }
 
     @ShellMethodAvailability
-    public Availability listProjectsAvailability(){
-        if(configurationClass.getUser()==null){
+    public Availability listProjectsAvailability() {
+        if (configurationClass.getUser() == null) {
             return Availability.unavailable("No one is logged");
         }
-        if(configurationClass.checkPermission(new Object(){}.getClass().getEnclosingMethod().getName(), permissions)){
+        if (configurationClass.checkPermission(new Object() {
+        }.getClass().getEnclosingMethod().getName(), permissions)) {
             return Availability.available();
         }
         return Availability.unavailable("Access denied");
