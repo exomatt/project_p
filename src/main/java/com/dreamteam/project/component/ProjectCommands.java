@@ -8,6 +8,7 @@ import com.dreamteam.project.model.Document;
 import com.dreamteam.project.model.Project;
 import com.dreamteam.project.model.Role;
 import com.dreamteam.project.repository.AssigmentRepo;
+import com.dreamteam.project.repository.DocumentRepo;
 import com.dreamteam.project.repository.ProjectRepo;
 import com.dreamteam.project.repository.UserRepo;
 import lombok.RequiredArgsConstructor;
@@ -31,6 +32,7 @@ import java.util.stream.StreamSupport;
 public class ProjectCommands {
     private final ProjectRepo projectRepo;
     private final AssigmentRepo assigmentRepo;
+    private final DocumentRepo documentRepo;
     private final ConfigurationClass configurationClass;
     private final UserRepo userRepo;
     private Map<String, List<String>> permissions = new HashMap<>();
@@ -133,9 +135,18 @@ public class ProjectCommands {
                 throw new DBException("In project " + deletedProjectId + " there aren't documents");
             }
             List<Document> documentList = projectMigration.getDocuments();
-            documentList.addAll(documentListToMigration);
-            projectMigration.setDocuments(documentList);
+            for (Document doc:documentListToMigration) {
+                Document document = new Document();
+                document.setDocumentName(doc.getDocumentName());
+                document.setTopic(doc.getTopic());
+                document.setDocumentDescription(doc.getDocumentDescription());
+                document.setCreatorId(doc.getCreatorId());
+                document.setProject(projectMigration);
+                documentRepo.save(document);
+                projectMigration.addToList(document);
 
+            }
+            projectDeleted.setDocuments(null);
             projectRepo.save(projectMigration);
 
             deleteAssigment(deletedProjectId);
