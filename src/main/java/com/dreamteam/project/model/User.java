@@ -61,6 +61,6 @@ public class User {
     @Override
     public String toString() {
         return "User: " +
-                "\n\tname: '" + lastName + '\'' +", \n\tlogin: '" + login+ '\'';
+                "\n\tid: '" + userId + '\'' +"\n\tname: '" + lastName + '\'' +", \n\tlogin: '" + login+ '\'';
     }
 }
