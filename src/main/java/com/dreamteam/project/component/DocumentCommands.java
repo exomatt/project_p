@@ -26,8 +26,8 @@ import java.util.stream.StreamSupport;
 @ShellCommandGroup("Document commands")
 public class DocumentCommands {
 
-    private final DocumentRepo repo;
-    private final UserRepo uRepo;
+    private final DocumentRepo documentRepo;
+    private final UserRepo userRepo;
     private final ConfigurationClass configurationClass;
     private Map<String, List<String>> permissions = new HashMap<>();
 
@@ -36,7 +36,7 @@ public class DocumentCommands {
         Long creatorId = configurationClass.getUser().getUserId();
         Project project = configurationClass.getActualProject();
         Document document = new Document(null, documentName, desc, creatorId, topic, project);
-        document = repo.save(document);
+        document = documentRepo.save(document);
         return ("Document created succesfully: " + document);
     }
 
@@ -57,7 +57,7 @@ public class DocumentCommands {
     @ShellMethod("Find document by ID")
     public String findDocumentById(Long id) throws DBException {
         try {
-            Document document = repo.findById(id).orElseThrow(() -> new DBException("A person with id " + id + " cannot be found"));
+            Document document = documentRepo.findById(id).orElseThrow(() -> new DBException("A person with id " + id + " cannot be found"));
             return "Successfully found document -> " + document;
         } catch (DBException exception) {
             log.error("Cannot find document with id {}", id, exception);
@@ -82,11 +82,11 @@ public class DocumentCommands {
     @ShellMethod("Update document")
     public String updateDocument(@ShellOption(defaultValue = "-1" ,value = "--id") Long id, @ShellOption(defaultValue = "") String documentName, @ShellOption(defaultValue = "") String desc, @ShellOption(defaultValue = "") String topic) throws DBException {
         try {
-            Document document = repo.findById(id).orElseThrow(() -> new DBException("A document with id " + id + " cannot be found"));
+            Document document = documentRepo.findById(id).orElseThrow(() -> new DBException("A document with id " + id + " cannot be found"));
             if (!documentName.isEmpty()) document.setDocumentName(documentName);
             if (!desc.isEmpty()) document.setDocumentDescription(desc);
             if (!topic.isEmpty()) document.setTopic(topic);
-            document = repo.save(document);
+            document = documentRepo.save(document);
             return "Successfully updated the document -> " + document.toString();
         } catch (DBException exception) {
             log.error("Cannot find document with id {}", id, exception);
@@ -110,7 +110,7 @@ public class DocumentCommands {
 
     @ShellMethod("List all documents")
     public String listAllDocuments() {
-        return StreamSupport.stream(repo.findAll().spliterator(), false)
+        return StreamSupport.stream(documentRepo.findAll().spliterator(), false)
                 .map(Document::toString)
                 .collect(Collectors.joining("\n"));
     }
@@ -131,7 +131,7 @@ public class DocumentCommands {
 
     @ShellMethod("Delete document by ID")
     public String deleteDocumentById(Long id) {
-        repo.deleteById(id);
+        documentRepo.deleteById(id);
         return "Successfully deleted document with ID " + id;
     }
 
@@ -151,7 +151,7 @@ public class DocumentCommands {
 
     @ShellMethod("View document by name")
     public String viewDocumentByName(String name) {
-        return repo.findByDocumentName(name).stream()
+        return documentRepo.findByDocumentName(name).stream()
                 .map(Document::toString)
                 .collect(Collectors.joining("\n"));
     }
@@ -172,7 +172,7 @@ public class DocumentCommands {
 
     @ShellMethod("View document by id")
     public String viewDocumentById(Long id) {
-        return repo.findByDocumentId(id).stream()
+        return documentRepo.findByDocumentId(id).stream()
                 .map(Document::toString)
                 .collect(Collectors.joining("\n"));
     }
@@ -194,7 +194,7 @@ public class DocumentCommands {
     @ShellMethod("List documents of current user")
     public String listDocuments() {
         Long userId = configurationClass.getUser().getUserId();
-        return repo.findByCreatorId(userId).stream()
+        return documentRepo.findByCreatorId(userId).stream()
                 .map(Document::toString)
                 .collect(Collectors.joining("\n"));
     }
