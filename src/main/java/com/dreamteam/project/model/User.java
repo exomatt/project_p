@@ -60,8 +60,7 @@ public class User {
     }
     @Override
     public String toString() {
-        return "User{" +
-                "name='" + lastName + '\'' +", login='" + login+ '\''+
-                '}';//need to check if correct
+        return "User: " +
+                "\n\tname: '" + lastName + '\'' +", \n\tlogin: '" + login+ '\'';
     }
 }

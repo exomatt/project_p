@@ -20,6 +20,7 @@ import javax.annotation.PostConstruct;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
@@ -58,11 +59,10 @@ public class UserCommands {
     }
 
     @ShellMethod("Show users")
-    public void showUsers() {
-        List<User> userList = userRepo.findAll();
-        for (User user : userList) {
-            System.out.println(user.toString());
-        }
+    public String showUsers() {
+        return userRepo.findAll().stream()
+                .map(User::toString)
+                .collect(Collectors.joining("\n"));
     }
 
     @ShellMethodAvailability
