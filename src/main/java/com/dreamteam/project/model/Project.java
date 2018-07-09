@@ -86,6 +86,15 @@ public class Project {
         documents.add(document);
     }
 
+    public String toStringShort() {
+        return "Project\n" +
+                "\tId: " + projectId +
+                "\n\tName: '" + projectName + '\'' +
+                "\n\tCreator Id: " + creatorId +
+                "\n\tDescription: '" + projectDescription + '\'' +
+                '\n';
+    }
+
     @Override
     public String toString() {
         return "Project\n" +

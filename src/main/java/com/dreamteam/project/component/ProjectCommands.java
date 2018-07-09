@@ -214,7 +214,7 @@ public class ProjectCommands {
             if (!assigments.isEmpty()) {
 
                 for (Assigment ass : assigments) {
-                    projects = projects.concat("\n" + ass.getProject().toString());
+                    projects = projects.concat("\n" + ass.getProject().toStringShort());
                 }
                 return projects;
             } else {
