@@ -135,8 +135,6 @@ public class DocumentCommands {
             return "Cannot find that document";
         Document document = documents.get(0);
         Project project = document.getProject();
-        project.removeFromList(document);
-        projectRepo.save(project);
         documentRepo.deleteById(id);
         Long projectId = project.getProjectId();
         Project updatedProject = projectRepo.findById(projectId).orElseThrow(() -> new DBException("A project with id " + projectId + " cannot be found"));
